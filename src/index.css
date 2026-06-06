@@ -1013,3 +1013,109 @@ textarea.form-input {
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+/* Theme Toggle Button Style */
+.theme-toggle {
+  padding: 6px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--bg-input);
+  border-color: var(--border-focus);
+}
+
+/* Vision Panel Class wrapper */
+.vision-panel {
+  padding: 20px;
+  margin-bottom: 28px;
+  border: 1px dashed rgba(133, 77, 14, 0.25);
+  background: rgba(133, 77, 14, 0.02);
+}
+
+/* Warm Editorial Dark Mode Override */
+body.dark-mode {
+  --bg-main: #181615;          /* Warm dark charcoal paper */
+  --bg-sidebar: #12100f;       /* Deeper dark charcoal */
+  --bg-card: #201e1c;          /* Muted warm dark panel */
+  --bg-input: #1b1917;         /* Input background */
+  --border-color: #34302d;     /* Muted border */
+  --border-focus: #c29851;     /* Dignified gold/bronze */
+  --text-main: #f5f2eb;        /* Soft warm paper white */
+  --text-muted: #9c9589;       /* Soft muted sand-grey */
+  --text-inverse: #181615;
+
+  /* Accents */
+  --accent-primary: #f5f2eb;
+  --accent-primary-hover: #e6e0d3;
+  --accent-secondary: #c29851; /* Gold/bronze */
+  --accent-success: #6fa17d;   /* Dignified sage/forest green */
+  --accent-warning: #ca8a04;   /* Warm amber */
+  --accent-danger: #ef4444;
+
+  color-scheme: dark;
+}
+
+/* Dark mode specific fine-tuning */
+body.dark-mode .profile-card {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+body.dark-mode .nav-item:hover {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+body.dark-mode .nav-progress-badge {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.dark-mode .nav-progress-badge.completed {
+  background: rgba(111, 161, 125, 0.15);
+  color: var(--accent-success);
+}
+
+body.dark-mode .add-item-btn:hover {
+  background: rgba(194, 152, 81, 0.04);
+}
+
+body.dark-mode .security-alert {
+  background: rgba(111, 161, 125, 0.05);
+  border-color: rgba(111, 161, 125, 0.15);
+}
+
+body.dark-mode .vision-panel {
+  border: 1px dashed rgba(194, 152, 81, 0.25);
+  background: rgba(194, 152, 81, 0.02);
+}
+
+body.dark-mode .shortcuts-cheatsheet {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+body.dark-mode .shortcut-row span:first-child {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: rgba(156, 149, 137, 0.15);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 149, 137, 0.3);
+}
+
+body.dark-mode .modal-overlay {
+  background: rgba(18, 16, 15, 0.75);
+}
+
+

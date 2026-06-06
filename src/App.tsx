@@ -3,7 +3,7 @@ import {
   Heart, Users, DollarSign, Home, Key, FileCheck, Layers, 
   Download, Upload, Printer, Edit3, Trash2, Plus, 
   AlertCircle, HelpCircle, ChevronDown, ChevronUp, User, 
-  FileText, Shield, Sparkles, CheckCircle2, Info
+  FileText, Shield, Sparkles, CheckCircle2, Info, Sun, Moon
 } from 'lucide-react';
 import type { 
   LegacyBinderData, ProfileData, PersonalInfo, Contact, 
@@ -80,6 +80,20 @@ const DEFAULT_DATA: LegacyBinderData = {
 const STORAGE_KEY = 'legacy_binder_v1';
 
 export default function App() {
+  // Theme State (Dark mode)
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
+  });
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   // Main State
   const [binderData, setBinderData] = useState<LegacyBinderData>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -840,9 +854,19 @@ export default function App() {
     <div className="app-container">
       {/* Sidebar Panel */}
       <aside className="sidebar no-print">
-        <div className="logo-container">
-          <Sparkles className="logo-icon" size={24} />
-          <span className="logo-text">Legacy Binder</span>
+        <div className="logo-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Sparkles className="logo-icon" size={24} />
+            <span className="logo-text">Legacy Binder</span>
+          </div>
+          <button 
+            className="theme-toggle"
+            onClick={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')}
+            title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+            aria-label="Toggle Theme"
+          >
+            {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+          </button>
         </div>
 
         {/* Profile Switcher */}
@@ -1192,7 +1216,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="glass-panel" style={{padding: '20px', marginBottom: '28px', border: '1px dashed rgba(133, 77, 14, 0.25)', background: 'rgba(133, 77, 14, 0.02)'}}>
+            <div className="glass-panel vision-panel">
               <h4 style={{fontFamily: 'var(--font-family-title)', color: 'var(--accent-secondary)', fontSize: '1.05rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px'}}>
                 <Sparkles size={16} /> Product Vision: AI Legacy Interviewer
               </h4>
@@ -1251,7 +1275,7 @@ export default function App() {
                         return (
                           <div key={sec.id} className="category-row">
                             <div className="category-info">
-                              <div style={{color: comp === 100 ? 'var(--accent-success)' : 'var(--text-muted)', background: 'rgba(0,0,0,0.02)', padding: '8px', borderRadius: '8px'}}>
+                              <div style={{color: comp === 100 ? 'var(--accent-success)' : 'var(--text-muted)', background: 'var(--bg-input)', padding: '8px', borderRadius: '8px'}}>
                                 {sec.icon}
                               </div>
                               <div className="category-details">
@@ -1353,13 +1377,13 @@ export default function App() {
 
             <div>
               <div className="summary-grid">
-                {activeProfile.contacts.map((contact, index) => {
+                {activeProfile.contacts.map(contact => {
                   const isEditing = contact.id === editingItemId;
                   if (isEditing) {
                     return (
                       <div key={contact.id} className="list-item-card form-grid-full" style={{gridColumn: 'span 2'}}>
                         <div className="list-item-card-header">
-                          <span className="list-item-index">Editing Contact #{index + 1}</span>
+                          <span className="list-item-index">Editing Contact</span>
                           <div style={{display: 'flex', gap: '8px'}}>
                             <button 
                               className="btn btn-primary" 
@@ -1448,13 +1472,13 @@ export default function App() {
 
             <div>
               <div className="summary-grid">
-                {activeProfile.financialAccounts.map((account, index) => {
+                {activeProfile.financialAccounts.map(account => {
                   const isEditing = account.id === editingItemId;
                   if (isEditing) {
                     return (
                       <div key={account.id} className="list-item-card form-grid-full" style={{gridColumn: 'span 2'}}>
                         <div className="list-item-card-header">
-                          <span className="list-item-index">Editing Financial Record #{index + 1}</span>
+                          <span className="list-item-index">Editing Financial Record</span>
                           <div style={{display: 'flex', gap: '8px'}}>
                             <button 
                               className="btn btn-primary" 
@@ -1543,13 +1567,13 @@ export default function App() {
 
             <div>
               <div className="summary-grid">
-                {activeProfile.assets.map((asset, index) => {
+                {activeProfile.assets.map(asset => {
                   const isEditing = asset.id === editingItemId;
                   if (isEditing) {
                     return (
                       <div key={asset.id} className="list-item-card form-grid-full" style={{gridColumn: 'span 2'}}>
                         <div className="list-item-card-header">
-                          <span className="list-item-index">Editing Physical Asset #{index + 1}</span>
+                          <span className="list-item-index">Editing Physical Asset</span>
                           <div style={{display: 'flex', gap: '8px'}}>
                             <button 
                               className="btn btn-primary" 
@@ -1661,13 +1685,13 @@ export default function App() {
 
             <div>
               <div className="summary-grid">
-                {activeProfile.insurancePolicies.map((policy, index) => {
+                {activeProfile.insurancePolicies.map(policy => {
                   const isEditing = policy.id === editingItemId;
                   if (isEditing) {
                     return (
                       <div key={policy.id} className="list-item-card form-grid-full" style={{gridColumn: 'span 2'}}>
                         <div className="list-item-card-header">
-                          <span className="list-item-index">Editing Insurance Record #{index + 1}</span>
+                          <span className="list-item-index">Editing Insurance Record</span>
                           <div style={{display: 'flex', gap: '8px'}}>
                             <button 
                               className="btn btn-primary" 
@@ -1820,13 +1844,13 @@ export default function App() {
 
             <div>
               <div className="summary-grid">
-                {activeProfile.digitalAccounts.map((account, index) => {
+                {activeProfile.digitalAccounts.map(account => {
                   const isEditing = account.id === editingItemId;
                   if (isEditing) {
                     return (
                       <div key={account.id} className="list-item-card form-grid-full" style={{gridColumn: 'span 2'}}>
                         <div className="list-item-card-header">
-                          <span className="list-item-index">Editing Digital Profile #{index + 1}</span>
+                          <span className="list-item-index">Editing Digital Profile</span>
                           <div style={{display: 'flex', gap: '8px'}}>
                             <button 
                               className="btn btn-primary" 
@@ -2030,13 +2054,13 @@ export default function App() {
             
             <div style={{marginBottom: '32px'}}>
               <div className="summary-grid">
-                {activeProfile.sentimentalItems.map((item, index) => {
+                {activeProfile.sentimentalItems.map(item => {
                   const isEditing = item.id === editingItemId;
                   if (isEditing) {
                     return (
                       <div key={item.id} className="list-item-card form-grid-full" style={{gridColumn: 'span 2'}}>
                         <div className="list-item-card-header">
-                          <span className="list-item-index">Editing Belonging #{index + 1}</span>
+                          <span className="list-item-index">Editing Belonging</span>
                           <div style={{display: 'flex', gap: '8px'}}>
                             <button 
                               className="btn btn-primary" 
@@ -2108,13 +2132,13 @@ export default function App() {
 
             <div>
               <div className="summary-grid">
-                {activeProfile.pets.map((pet, index) => {
+                {activeProfile.pets.map(pet => {
                   const isEditing = pet.id === editingItemId;
                   if (isEditing) {
                     return (
                       <div key={pet.id} className="list-item-card form-grid-full" style={{gridColumn: 'span 2'}}>
                         <div className="list-item-card-header">
-                          <span className="list-item-index">Editing Pet #{index + 1}</span>
+                          <span className="list-item-index">Editing Pet</span>
                           <div style={{display: 'flex', gap: '8px'}}>
                             <button 
                               className="btn btn-primary" 
@@ -2207,9 +2231,9 @@ export default function App() {
             <div className="form-header">
               <h2>2. Key Contacts & Advisors</h2>
             </div>
-            {activeProfile.contacts.map((contact, idx) => (
+            {activeProfile.contacts.map(contact => (
               <div key={contact.id} className="list-item-card" style={{pageBreakInside: 'avoid', breakInside: 'avoid'}}>
-                <div className="list-item-card-header"><span className="list-item-index">Contact #{idx + 1} - {contact.relationship || 'Unspecified Relationship'}</span></div>
+                <div className="list-item-card-header"><span className="list-item-index">Contact: {contact.relationship || 'Unspecified Relationship'}</span></div>
                 <div className="form-grid">
                   <div className="form-group"><label>Name</label><span className="print-val">{contact.name || '—'}</span></div>
                   <div className="form-group"><label>Phone</label><span className="print-val">{contact.phone || '—'}</span></div>
@@ -2226,9 +2250,9 @@ export default function App() {
               <h2>3. Financial Accounts & Liabilities</h2>
             </div>
             {activeProfile.financialAccounts.length === 0 ? <p style={{fontStyle: 'italic'}}>No financial accounts listed.</p> : 
-              activeProfile.financialAccounts.map((account, idx) => (
+              activeProfile.financialAccounts.map(account => (
                 <div key={account.id} className="list-item-card" style={{pageBreakInside: 'avoid', breakInside: 'avoid'}}>
-                  <div className="list-item-card-header"><span className="list-item-index">Financial Account #{idx + 1}</span></div>
+                  <div className="list-item-card-header"><span className="list-item-index">Financial Account</span></div>
                   <div className="form-grid">
                     <div className="form-group"><label>Institution</label><span className="print-val">{account.institution || '—'}</span></div>
                     <div className="form-group"><label>Account Type</label><span className="print-val">{account.accountType || '—'}</span></div>
@@ -2247,9 +2271,9 @@ export default function App() {
               <h2>4. Real Estate, Vehicles & Physical Safes</h2>
             </div>
             {activeProfile.assets.length === 0 ? <p style={{fontStyle: 'italic'}}>No assets listed.</p> : 
-              activeProfile.assets.map((asset, idx) => (
+              activeProfile.assets.map(asset => (
                 <div key={asset.id} className="list-item-card" style={{pageBreakInside: 'avoid', breakInside: 'avoid'}}>
-                  <div className="list-item-card-header"><span className="list-item-index">Asset #{idx + 1} - {asset.category.replace('_', ' ').toUpperCase()}</span></div>
+                  <div className="list-item-card-header"><span className="list-item-index">Asset: {asset.category.replace('_', ' ').toUpperCase()}</span></div>
                   <div className="form-grid">
                     <div className="form-grid-full"><div className="form-group"><label>Asset Description</label><span className="print-val">{asset.description || '—'}</span></div></div>
                     <div className="form-group"><label>Title Holder</label><span className="print-val">{asset.titleHolder || '—'}</span></div>
@@ -2268,9 +2292,9 @@ export default function App() {
               <h2>5. Insurance Policies</h2>
             </div>
             {activeProfile.insurancePolicies.length === 0 ? <p style={{fontStyle: 'italic'}}>No insurance policies listed.</p> : 
-              activeProfile.insurancePolicies.map((policy, idx) => (
+              activeProfile.insurancePolicies.map(policy => (
                 <div key={policy.id} className="list-item-card" style={{pageBreakInside: 'avoid', breakInside: 'avoid'}}>
-                  <div className="list-item-card-header"><span className="list-item-index">Policy #{idx + 1} - {policy.policyType || 'Unspecified Type'}</span></div>
+                  <div className="list-item-card-header"><span className="list-item-index">Insurance Policy: {policy.policyType || 'Unspecified Type'}</span></div>
                   <div className="form-grid">
                     <div className="form-group"><label>Provider</label><span className="print-val">{policy.provider || '—'}</span></div>
                     <div className="form-group"><label>Policy Number</label><span className="print-val">{policy.policyNumber || '—'}</span></div>
@@ -2307,9 +2331,9 @@ export default function App() {
               <h2>7. Digital Accounts & Legacy Rules</h2>
             </div>
             {activeProfile.digitalAccounts.length === 0 ? <p style={{fontStyle: 'italic'}}>No digital accounts listed.</p> : 
-              activeProfile.digitalAccounts.map((account, idx) => (
+              activeProfile.digitalAccounts.map(account => (
                 <div key={account.id} className="list-item-card" style={{pageBreakInside: 'avoid', breakInside: 'avoid'}}>
-                  <div className="list-item-card-header"><span className="list-item-index">Digital Account #{idx + 1} - {account.platform || '—'}</span></div>
+                  <div className="list-item-card-header"><span className="list-item-index">Digital Account: {account.platform || '—'}</span></div>
                   <div className="form-grid">
                     <div className="form-group"><label>Username</label><span className="print-val">{account.username || '—'}</span></div>
                     <div className="form-group"><label>Recovery contact</label><span className="print-val">{account.recoveryEmailPhone || '—'}</span></div>
@@ -2362,9 +2386,9 @@ export default function App() {
             
             <h3 style={{fontSize: '12pt', fontWeight: 'bold', margin: '15px 0 10px 0', borderBottom: '1px solid #000'}}>🧸 Sentimental Belongings</h3>
             {activeProfile.sentimentalItems.length === 0 ? <p style={{fontStyle: 'italic'}}>No sentimental belongings listed.</p> : 
-              activeProfile.sentimentalItems.map((item, idx) => (
+              activeProfile.sentimentalItems.map(item => (
                 <div key={item.id} className="list-item-card" style={{pageBreakInside: 'avoid', breakInside: 'avoid'}}>
-                  <div className="list-item-card-header"><span className="list-item-index">Item #{idx + 1} - {item.description || '—'}</span></div>
+                  <div className="list-item-card-header"><span className="list-item-index">Sentimental Belonging: {item.description || '—'}</span></div>
                   <div className="form-grid">
                     <div className="form-group"><label>Recipient</label><span className="print-val">{item.recipient || '—'}</span></div>
                     <div className="form-grid-full"><div className="form-group"><label>Significance / Story</label><span className="print-val">{item.significance || '—'}</span></div></div>
@@ -2376,9 +2400,9 @@ export default function App() {
 
             <h3 style={{fontSize: '12pt', fontWeight: 'bold', margin: '25px 0 10px 0', borderBottom: '1px solid #000'}}>🐾 Pet Care Guidelines</h3>
             {activeProfile.pets.length === 0 ? <p style={{fontStyle: 'italic'}}>No pets listed.</p> : 
-              activeProfile.pets.map((pet, idx) => (
+              activeProfile.pets.map(pet => (
                 <div key={pet.id} className="list-item-card" style={{pageBreakInside: 'avoid', breakInside: 'avoid'}}>
-                  <div className="list-item-card-header"><span className="list-item-index">Pet #{idx + 1} - {pet.petName || '—'} ({pet.typeBreed || '—'})</span></div>
+                  <div className="list-item-card-header"><span className="list-item-index">Pet: {pet.petName || '—'} ({pet.typeBreed || '—'})</span></div>
                   <div className="form-grid">
                     <div className="form-group"><label>Veterinary Clinic</label><span className="print-val">{pet.vetContact || '—'}</span></div>
                     <div className="form-group"><label>Designated Guardian</label><span className="print-val">{pet.designatedGuardian || '—'}</span></div>
