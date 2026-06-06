@@ -949,7 +949,7 @@ export default function App() {
           >
             <div className="nav-label">
               <User className="nav-icon" />
-              <span>1. Personal Info</span>
+              <span>Personal Info</span>
             </div>
             <span className={`nav-progress-badge ${getSectionCompletion(activeProfile, 'personal') === 100 ? 'completed' : ''}`}>
               {getSectionCompletion(activeProfile, 'personal')}%
@@ -962,7 +962,7 @@ export default function App() {
           >
             <div className="nav-label">
               <Users className="nav-icon" />
-              <span>2. Key Contacts</span>
+              <span>Key Contacts</span>
             </div>
             <span className={`nav-progress-badge ${getSectionCompletion(activeProfile, 'contacts') === 100 ? 'completed' : ''}`}>
               {getSectionCompletion(activeProfile, 'contacts')}%
@@ -975,7 +975,7 @@ export default function App() {
           >
             <div className="nav-label">
               <Key className="nav-icon" />
-              <span>7. Digital Accounts</span>
+              <span>Digital Accounts</span>
             </div>
             <span className={`nav-progress-badge ${getSectionCompletion(activeProfile, 'digital') === 100 ? 'completed' : ''}`}>
               {getSectionCompletion(activeProfile, 'digital')}%
@@ -990,7 +990,7 @@ export default function App() {
           >
             <div className="nav-label">
               <DollarSign className="nav-icon" />
-              <span>3. Bank & Credit</span>
+              <span>Bank & Credit</span>
             </div>
             <span className={`nav-progress-badge ${getSectionCompletion(activeProfile, 'financial') === 100 ? 'completed' : ''}`}>
               {getSectionCompletion(activeProfile, 'financial')}%
@@ -1003,7 +1003,7 @@ export default function App() {
           >
             <div className="nav-label">
               <Home className="nav-icon" />
-              <span>4. Real Estate & Safes</span>
+              <span>Real Estate & Safes</span>
             </div>
             <span className={`nav-progress-badge ${getSectionCompletion(activeProfile, 'assets') === 100 ? 'completed' : ''}`}>
               {getSectionCompletion(activeProfile, 'assets')}%
@@ -1016,7 +1016,7 @@ export default function App() {
           >
             <div className="nav-label">
               <FileCheck className="nav-icon" />
-              <span>5. Insurance Policies</span>
+              <span>Insurance Policies</span>
             </div>
             <span className={`nav-progress-badge ${getSectionCompletion(activeProfile, 'insurance') === 100 ? 'completed' : ''}`}>
               {getSectionCompletion(activeProfile, 'insurance')}%
@@ -1031,7 +1031,7 @@ export default function App() {
           >
             <div className="nav-label">
               <Heart className="nav-icon" />
-              <span>6. Medical History</span>
+              <span>Medical History</span>
             </div>
             <span className={`nav-progress-badge ${getSectionCompletion(activeProfile, 'medical') === 100 ? 'completed' : ''}`}>
               {getSectionCompletion(activeProfile, 'medical')}%
@@ -1044,7 +1044,7 @@ export default function App() {
           >
             <div className="nav-label">
               <FileText className="nav-icon" />
-              <span>8. Final Arrangements</span>
+              <span>Final Arrangements</span>
             </div>
             <span className={`nav-progress-badge ${getSectionCompletion(activeProfile, 'estate') === 100 ? 'completed' : ''}`}>
               {getSectionCompletion(activeProfile, 'estate')}%
@@ -1057,7 +1057,7 @@ export default function App() {
           >
             <div className="nav-label">
               <Sparkles className="nav-icon" />
-              <span>9. Legacy & Memories</span>
+              <span>Legacy & Memories</span>
             </div>
             <span className={`nav-progress-badge ${getSectionCompletion(activeProfile, 'legacy') === 100 ? 'completed' : ''}`}>
               {getSectionCompletion(activeProfile, 'legacy')}%
@@ -1070,7 +1070,7 @@ export default function App() {
           >
             <div className="nav-label">
               <Heart className="nav-icon" />
-              <span>10. Sentimental & Pets</span>
+              <span>Sentimental & Pets</span>
             </div>
             <span className={`nav-progress-badge ${getSectionCompletion(activeProfile, 'sentimental') === 100 ? 'completed' : ''}`}>
               {getSectionCompletion(activeProfile, 'sentimental')}%
@@ -1233,26 +1233,26 @@ export default function App() {
                   {
                     title: "Logistics & Contacts",
                     items: [
-                      { id: 'personal', name: '1. Personal & Background Profile', desc: 'Biographical history, employment, and service details', icon: <User size={18} /> },
-                      { id: 'contacts', name: '2. Key Contacts & Family', desc: 'Executors, attorneys, doctors, family members to notify', icon: <Users size={18} /> },
-                      { id: 'digital', name: '7. Digital Accounts & Subscriptions', desc: 'Recovery details, subscription renewals, social media rules', icon: <Key size={18} /> },
+                      { id: 'personal', name: 'Personal & Background Profile', desc: 'Biographical history, employment, and service details', icon: <User size={18} /> },
+                      { id: 'contacts', name: 'Key Contacts & Family', desc: 'Executors, attorneys, doctors, family members to notify', icon: <Users size={18} /> },
+                      { id: 'digital', name: 'Digital Accounts & Subscriptions', desc: 'Recovery details, subscription renewals, social media rules', icon: <Key size={18} /> },
                     ]
                   },
                   {
                     title: "Financial & Assets",
                     items: [
-                      { id: 'financial', name: '3. Financial Accounts & Liabilities', desc: 'Banks, investments, retirement accounts, credit cards', icon: <DollarSign size={18} /> },
-                      { id: 'assets', name: '4. Physical Assets & Safes', desc: 'Real estate properties, vehicles, safes, storage locker codes', icon: <Home size={18} /> },
-                      { id: 'insurance', name: '5. Insurance Policies', desc: 'Life, health, auto, homeowners, and disability details', icon: <FileCheck size={18} /> },
+                      { id: 'financial', name: 'Financial Accounts & Liabilities', desc: 'Banks, investments, retirement accounts, credit cards', icon: <DollarSign size={18} /> },
+                      { id: 'assets', name: 'Physical Assets & Safes', desc: 'Real estate properties, vehicles, safes, storage locker codes', icon: <Home size={18} /> },
+                      { id: 'insurance', name: 'Insurance Policies', desc: 'Life, health, auto, homeowners, and disability details', icon: <FileCheck size={18} /> },
                     ]
                   },
                   {
                     title: "Legacy & Wishes",
                     items: [
-                      { id: 'medical', name: '6. Medical Profile & Directives', desc: 'Blood type, medications, medical directives, living will location', icon: <Heart size={18} /> },
-                      { id: 'estate', name: '8. Estate Plans & Final arrangements', desc: 'Location of original Will, funeral preferences, obituary notes', icon: <FileText size={18} /> },
-                      { id: 'legacy', name: '9. Legacy, Memories & Ancestry', desc: 'Ancestry origins, holiday traditions, life wisdom, and checked/unchecked bucket lists', icon: <Sparkles size={18} /> },
-                      { id: 'sentimental', name: '10. Sentimental Items & Pets', desc: 'High sentimental belongings distribution registry, detailed pet care arrangements', icon: <Heart size={18} /> },
+                      { id: 'medical', name: 'Medical Profile & Directives', desc: 'Blood type, medications, medical directives, living will location', icon: <Heart size={18} /> },
+                      { id: 'estate', name: 'Estate Plans & Final arrangements', desc: 'Location of original Will, funeral preferences, obituary notes', icon: <FileText size={18} /> },
+                      { id: 'legacy', name: 'Legacy, Memories & Ancestry', desc: 'Ancestry origins, holiday traditions, life wisdom, and checked/unchecked bucket lists', icon: <Sparkles size={18} /> },
+                      { id: 'sentimental', name: 'Sentimental Items & Pets', desc: 'High sentimental belongings distribution registry, detailed pet care arrangements', icon: <Heart size={18} /> },
                     ]
                   }
                 ].map(pillar => (
@@ -1315,7 +1315,7 @@ export default function App() {
           <div className="form-card glass-panel no-print">
             <div className="form-header">
               <div className="form-title-group">
-                <h2>1. Personal & Background Information</h2>
+                <h2>Personal & Background Information</h2>
                 <p>Basic biographical and personal history to help executors draft obituaries or resolve employment/tax matters.</p>
               </div>
             </div>
@@ -1361,7 +1361,7 @@ export default function App() {
           <div className="form-card glass-panel no-print">
             <div className="form-header">
               <div className="form-title-group">
-                <h2>2. Key Contacts & Advisors</h2>
+                <h2>Key Contacts & Advisors</h2>
                 <p>The individuals and professional advisors who need to be notified or called upon to execute your wishes.</p>
               </div>
             </div>
@@ -1456,7 +1456,7 @@ export default function App() {
           <div className="form-card glass-panel no-print">
             <div className="form-header">
               <div className="form-title-group">
-                <h2>3. Financial Accounts & Liabilities</h2>
+                <h2>Financial Accounts & Liabilities</h2>
                 <p>Document financial institutions, checking/savings, retirement plans, credit cards, and mortgage details.</p>
               </div>
             </div>
@@ -1551,7 +1551,7 @@ export default function App() {
           <div className="form-card glass-panel no-print">
             <div className="form-header">
               <div className="form-title-group">
-                <h2>4. Real Estate, Vehicles & Physical Safes</h2>
+                <h2>Real Estate, Vehicles & Physical Safes</h2>
                 <p>Location and details of physical properties, vehicles, collections, and home storage units.</p>
               </div>
             </div>
@@ -1669,7 +1669,7 @@ export default function App() {
           <div className="form-card glass-panel no-print">
             <div className="form-header">
               <div className="form-title-group">
-                <h2>5. Insurance Policies</h2>
+                <h2>Insurance Policies</h2>
                 <p>Information on active life, health, auto, homeowner, disability, and long-term care policies.</p>
               </div>
             </div>
@@ -1766,7 +1766,7 @@ export default function App() {
           <div className="form-card glass-panel no-print">
             <div className="form-header">
               <div className="form-title-group">
-                <h2>6. Medical Profile & Directives</h2>
+                <h2>Medical Profile & Directives</h2>
                 <p>Crucial information regarding health, active medication, doctor contacts, and medical powers of attorney.</p>
               </div>
             </div>
@@ -1828,7 +1828,7 @@ export default function App() {
           <div className="form-card glass-panel no-print">
             <div className="form-header">
               <div className="form-title-group">
-                <h2>7. Digital Accounts & Legacy Rules</h2>
+                <h2>Digital Accounts & Legacy Rules</h2>
                 <p>Instructions for handling online profiles, primary emails, cloud photos, and device passcodes.</p>
               </div>
             </div>
@@ -1922,7 +1922,7 @@ export default function App() {
           <div className="form-card glass-panel no-print">
             <div className="form-header">
               <div className="form-title-group">
-                <h2>8. Estate Plans & Final Wishes</h2>
+                <h2>Estate Plans & Final Wishes</h2>
                 <p>Exact physical locations of legal wills and trusts, plus details on funeral arrangements and memorial letters.</p>
               </div>
             </div>
@@ -1990,7 +1990,7 @@ export default function App() {
           <div className="form-card glass-panel no-print">
             <div className="form-header">
               <div className="form-title-group">
-                <h2>9. Legacy, Memories & Ancestry</h2>
+                <h2>Legacy, Memories & Ancestry</h2>
                 <p>Ancestry origins, holiday traditions, core life lessons, wisdom, and checked/unchecked bucket lists.</p>
               </div>
             </div>
@@ -2035,7 +2035,7 @@ export default function App() {
           <div className="form-card glass-panel no-print">
             <div className="form-header">
               <div className="form-title-group">
-                <h2>10. Sentimental Items & Pets</h2>
+                <h2>Sentimental Items & Pets</h2>
                 <p>Distribution wishes for belongings of high sentimental value, and custody/care guidelines for your current pets.</p>
               </div>
             </div>
@@ -2211,7 +2211,7 @@ export default function App() {
           {/* Section 1 */}
           <div className="form-card">
             <div className="form-header">
-              <h2>1. Personal & Background Information</h2>
+              <h2>Personal & Background Information</h2>
             </div>
             <div className="form-grid">
               <div className="form-group"><label>Full Legal Name</label><span className="print-val">{activeProfile.personalInfo.fullName || '—'}</span></div>
@@ -2229,7 +2229,7 @@ export default function App() {
           {/* Section 2 */}
           <div className="form-card">
             <div className="form-header">
-              <h2>2. Key Contacts & Advisors</h2>
+              <h2>Key Contacts & Advisors</h2>
             </div>
             {activeProfile.contacts.map(contact => (
               <div key={contact.id} className="list-item-card" style={{pageBreakInside: 'avoid', breakInside: 'avoid'}}>
@@ -2247,7 +2247,7 @@ export default function App() {
           {/* Section 3 */}
           <div className="form-card">
             <div className="form-header">
-              <h2>3. Financial Accounts & Liabilities</h2>
+              <h2>Financial Accounts & Liabilities</h2>
             </div>
             {activeProfile.financialAccounts.length === 0 ? <p style={{fontStyle: 'italic'}}>No financial accounts listed.</p> : 
               activeProfile.financialAccounts.map(account => (
@@ -2268,7 +2268,7 @@ export default function App() {
           {/* Section 4 */}
           <div className="form-card">
             <div className="form-header">
-              <h2>4. Real Estate, Vehicles & Physical Safes</h2>
+              <h2>Real Estate, Vehicles & Physical Safes</h2>
             </div>
             {activeProfile.assets.length === 0 ? <p style={{fontStyle: 'italic'}}>No assets listed.</p> : 
               activeProfile.assets.map(asset => (
@@ -2289,7 +2289,7 @@ export default function App() {
           {/* Section 5 */}
           <div className="form-card">
             <div className="form-header">
-              <h2>5. Insurance Policies</h2>
+              <h2>Insurance Policies</h2>
             </div>
             {activeProfile.insurancePolicies.length === 0 ? <p style={{fontStyle: 'italic'}}>No insurance policies listed.</p> : 
               activeProfile.insurancePolicies.map(policy => (
@@ -2311,7 +2311,7 @@ export default function App() {
           {/* Section 6 */}
           <div className="form-card">
             <div className="form-header">
-              <h2>6. Medical Profile & Directives</h2>
+              <h2>Medical Profile & Directives</h2>
             </div>
             <div className="form-grid">
               <div className="form-group"><label>Blood Type</label><span className="print-val">{activeProfile.medicalProfile.bloodType || '—'}</span></div>
@@ -2328,7 +2328,7 @@ export default function App() {
           {/* Section 7 */}
           <div className="form-card">
             <div className="form-header">
-              <h2>7. Digital Accounts & Legacy Rules</h2>
+              <h2>Digital Accounts & Legacy Rules</h2>
             </div>
             {activeProfile.digitalAccounts.length === 0 ? <p style={{fontStyle: 'italic'}}>No digital accounts listed.</p> : 
               activeProfile.digitalAccounts.map(account => (
@@ -2348,7 +2348,7 @@ export default function App() {
           {/* Section 8 */}
           <div className="form-card">
             <div className="form-header">
-              <h2>8. Estate Plans & Final Wishes</h2>
+              <h2>Estate Plans & Final Wishes</h2>
             </div>
             <div className="form-grid">
               <div className="form-group"><label>Location of Original Will</label><span className="print-val">{activeProfile.finalArrangements.willLocation || '—'}</span></div>
@@ -2366,7 +2366,7 @@ export default function App() {
           {/* Section 9 */}
           <div className="form-card">
             <div className="form-header">
-              <h2>9. Legacy, Memories & Ancestry</h2>
+              <h2>Legacy, Memories & Ancestry</h2>
             </div>
             <div className="form-grid">
               <div className="form-grid-full"><div className="form-group"><label>Family Origins & Ancestry Details</label><span className="print-val">{activeProfile.legacyMemories.familyOrigins || '—'}</span></div></div>
@@ -2381,7 +2381,7 @@ export default function App() {
           {/* Section 10 */}
           <div className="form-card">
             <div className="form-header">
-              <h2>10. Sentimental Items & Pets</h2>
+              <h2>Sentimental Items & Pets</h2>
             </div>
             
             <h3 style={{fontSize: '12pt', fontWeight: 'bold', margin: '15px 0 10px 0', borderBottom: '1px solid #000'}}>🧸 Sentimental Belongings</h3>
