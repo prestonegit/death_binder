@@ -1,73 +1,36 @@
-# React + TypeScript + Vite
+# DeathBinder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A quiet, offline-first personal estate and emergency continuity binder designed for families and executors.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+DeathBinder consolidates critical emergency directions, vital personal records, legal documents, financial accounts, and personal wishes. All data is saved exclusively to local device storage (`localStorage`) with no cloud sync, accounts, or telemetry.
 
-## React Compiler
+## Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Offline-First & Sovereign Privacy**: Stored 100% locally in your browser. Encrypted export and import via JSON backups.
+- **Physical Binder Print Engine**: Formatted specifically for standard 8.5" × 11" 3-ring binders, including printable spine inserts (1.0", 1.5", 2.0") and tab divider cutouts.
+- **Executor Action Checklist**: Chronological administrative guide from the first 24 hours through formal probate settlement.
+- **Privacy Shield (`Alt + P`)**: Rapid on-screen masking of sensitive identifiers and account numbers.
+- **Keyboard Navigation**:
+  - `Alt + 1` / `Alt + 2`: Switch active profiles (Primary / Spouse)
+  - `Alt + P`: Toggle Privacy Shield
+  - `Alt + Left` / `Alt + Right`: Cycle section tabs
+  - `Cmd / Ctrl + S`: Save confirmation
 
-## Expanding the ESLint configuration
+## Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Install dependencies
+npm install
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# Start local development server
+npm run dev
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Run TypeScript build
+npm run build
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Run linter
+npm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```

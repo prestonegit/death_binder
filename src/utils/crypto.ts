@@ -50,6 +50,7 @@ export interface EncryptedPayload {
   salt: string;
   iv: string;
   ciphertext: string;
+  version?: number;
 }
 
 /**
@@ -77,7 +78,8 @@ export async function encryptData(data: string, password: string): Promise<strin
   const payload: EncryptedPayload = {
     salt: arrayBufferToBase64(salt.buffer),
     iv: arrayBufferToBase64(iv.buffer),
-    ciphertext: arrayBufferToBase64(ciphertextBuffer)
+    ciphertext: arrayBufferToBase64(ciphertextBuffer),
+    version: 2
   };
 
   return JSON.stringify(payload);
@@ -88,7 +90,7 @@ export async function encryptData(data: string, password: string): Promise<strin
  */
 export async function decryptData(encryptedJson: string, password: string): Promise<string> {
   try {
-    const payload: EncryptedPayload = JSON.parse(encryptedJson);
+    const payload = JSON.parse(encryptedJson) as EncryptedPayload;
     if (!payload.salt || !payload.iv || !payload.ciphertext) {
       throw new Error('Invalid encrypted file format.');
     }
@@ -112,6 +114,6 @@ export async function decryptData(encryptedJson: string, password: string): Prom
     return decoder.decode(decryptedBuffer);
   } catch (error) {
     console.error('Decryption failed:', error);
-    throw new Error('Failed to decrypt data. Ensure the password is correct.');
+    throw new Error('Failed to decrypt data. Ensure the password is correct.', { cause: error });
   }
 }
