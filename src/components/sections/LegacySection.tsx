@@ -3,6 +3,8 @@ import { Sparkles, BookOpen } from 'lucide-react';
 import type { LegacyMemories } from '../../types';
 import { SectionHeader } from '../common/SectionHeader';
 import { GuidanceTip } from '../common/GuidanceTip';
+import { SectionStarterBanner } from '../common/SectionStarterBanner';
+import { LEGACY_STARTERS, type SectionStarterArchetype } from '../../data/sectionStarters';
 
 interface LegacySectionProps {
   memories: LegacyMemories;
@@ -17,6 +19,33 @@ export const LegacySection: React.FC<LegacySectionProps> = ({
   onUpdate,
   onToggleNA
 }) => {
+  const hasExistingData = Boolean(
+    memories.familyOrigins ||
+    memories.traditionsRecipes ||
+    memories.lifeLessonsWisdom ||
+    memories.bucketListCompleted ||
+    memories.bucketListFuture ||
+    memories.notes
+  );
+
+  const handleApplyStarter = (
+    starter: SectionStarterArchetype<LegacyMemories>,
+    mode: 'fill_empty' | 'replace'
+  ) => {
+    if (mode === 'replace') {
+      onUpdate({ ...starter.data });
+    } else {
+      const merged: Partial<LegacyMemories> = {};
+      const starterData = starter.data;
+      (Object.keys(starterData) as Array<keyof LegacyMemories>).forEach(key => {
+        if (!memories[key] && starterData[key]) {
+          merged[key] = starterData[key];
+        }
+      });
+      onUpdate(merged);
+    }
+  };
+
   return (
     <div className="section-content-container">
       <SectionHeader
@@ -30,6 +59,17 @@ export const LegacySection: React.FC<LegacySectionProps> = ({
       <GuidanceTip type="calm" title="The Non-Financial Legacy">
         While financial and legal details are necessary, the stories, principles, and traditions you record here are often what your children and grandchildren cherish the most.
       </GuidanceTip>
+
+      {/* 1-Click Legacy & Life Wisdom Starters */}
+      <SectionStarterBanner
+        title="1-Click Legacy & Life Wisdom Starters"
+        badge="From Family Storyteller to Adventurer"
+        description="Staring at a blank page when writing life advice or family memories is difficult. Choose a thoughtful reflection archetype below to pre-fill articulate memories, then edit or add your own stories:"
+        starters={LEGACY_STARTERS}
+        onApply={handleApplyStarter}
+        hasExistingData={hasExistingData}
+        defaultExpanded={!hasExistingData}
+      />
 
       <div className="form-card glass-panel">
         <div className="form-section-title">

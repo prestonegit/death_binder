@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FileCheck, Shield } from 'lucide-react';
 import type { TaxVitalRecords } from '../../types';
 import { SectionHeader } from '../common/SectionHeader';
@@ -16,7 +16,7 @@ interface TaxVitalSectionProps {
 
 const LOCATION_PRESETS = [
   'Home Fireproof Safe',
-  'Master Bedroom Closet',
+  'Master Bedroom Closet Shelf',
   'Office Filing Cabinet',
   'With CPA / Accountant',
   'Bank Safe Deposit Box'
@@ -28,6 +28,10 @@ export const TaxVitalSection: React.FC<TaxVitalSectionProps> = ({
   onUpdate,
   onToggleNA
 }) => {
+  const [hasMilitaryService, setHasMilitaryService] = useState<boolean>(() => {
+    return Boolean(records.militaryDd214Location);
+  });
+
   return (
     <div className="section-content-container">
       <SectionHeader
@@ -51,10 +55,10 @@ export const TaxVitalSection: React.FC<TaxVitalSectionProps> = ({
         <div className="form-grid">
           <div className="form-group form-grid-half">
             <div className="label-with-info">
-              <label className="form-label">Location of Prior 3 Years Tax Returns (1040s)</label>
+              <label className="form-label">Prior Tax Returns (Last 3 Years) Location</label>
               <InfoBubble
-                title="Why 3 years of tax returns are needed"
-                explanation="CPAs and probate attorneys need previous tax returns to identify ongoing passive income sources, capital loss carryovers, and prepare the decedent’s final 1040 return."
+                title="Why physical or digital tax copies matter"
+                explanation="The CPA will need past returns to file final income taxes, claim loss carryovers, and address potential estate tax deductions."
               />
             </div>
             <input
@@ -140,26 +144,7 @@ export const TaxVitalSection: React.FC<TaxVitalSectionProps> = ({
             />
           </div>
 
-          <div className="form-group form-grid-half">
-            <div className="label-with-info">
-              <label className="form-label">Military Discharge (DD-214) Location</label>
-              <InfoBubble
-                title={INFO_DEFINITIONS.tax_dd214.title}
-                explanation={INFO_DEFINITIONS.tax_dd214.explanation}
-                example={INFO_DEFINITIONS.tax_dd214.example}
-              />
-            </div>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="e.g. Fire safe envelope #2 (Needed for VA burial benefits & flag honors)"
-              value={records.militaryDd214Location}
-              onChange={e => onUpdate({ militaryDd214Location: e.target.value })}
-            />
-            <span className="form-helper-text">Required by the VA to secure burial in national cemeteries and military honors.</span>
-          </div>
-
-          <div className="form-group form-grid-half">
+          <div className="form-group form-grid-full">
             <label className="form-label">Vehicle Titles & Property Deeds Location</label>
             <input
               type="text"
@@ -169,6 +154,50 @@ export const TaxVitalSection: React.FC<TaxVitalSectionProps> = ({
               onChange={e => onUpdate({ vehicleTitlesLocation: e.target.value })}
             />
           </div>
+
+          {/* Progressive Disclosure: Military DD-214 */}
+          <div className="form-group form-grid-full">
+            <div className="progressive-disclosure-toggle-row">
+              <span className="disclosure-prompt-text">Did you or your spouse serve in the U.S. Armed Forces?</span>
+              <div className="disclosure-toggle-buttons">
+                <button
+                  type="button"
+                  className={`disclosure-btn ${hasMilitaryService ? 'active' : ''}`}
+                  onClick={() => setHasMilitaryService(true)}
+                >
+                  Yes, military service (DD-214)
+                </button>
+                <button
+                  type="button"
+                  className={`disclosure-btn ${!hasMilitaryService ? 'active' : ''}`}
+                  onClick={() => setHasMilitaryService(false)}
+                >
+                  No military service
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {hasMilitaryService && (
+            <div className="form-group form-grid-full">
+              <div className="label-with-info">
+                <label className="form-label">Military Discharge (DD-214) Location</label>
+                <InfoBubble
+                  title={INFO_DEFINITIONS.tax_dd214.title}
+                  explanation={INFO_DEFINITIONS.tax_dd214.explanation}
+                  example={INFO_DEFINITIONS.tax_dd214.example}
+                />
+              </div>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="e.g. Fire safe envelope #2 (Needed for VA burial benefits & flag honors)"
+                value={records.militaryDd214Location}
+                onChange={e => onUpdate({ militaryDd214Location: e.target.value })}
+              />
+              <span className="form-helper-text">Required by the VA to secure burial in national cemeteries and military honors.</span>
+            </div>
+          )}
 
           <div className="form-group form-grid-full">
             <label className="form-label">Additional Vital Document Notes</label>

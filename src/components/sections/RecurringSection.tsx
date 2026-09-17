@@ -7,12 +7,16 @@ import { PrivacyField } from '../common/PrivacyField';
 import { InfoBubble } from '../common/InfoBubble';
 import { PresetChips, type PresetOption } from '../common/PresetChips';
 import { INFO_DEFINITIONS } from '../../data/infoDefinitions';
+import { CONTINUITY_ACTION_PRESETS } from '../../data/philosophyPresets';
+import { SectionStarterBanner } from '../common/SectionStarterBanner';
+import { RECURRING_STARTERS, type SectionStarterArchetype } from '../../data/sectionStarters';
 
 interface RecurringSectionProps {
   payments: RecurringPayment[];
   isPrivacyMasked: boolean;
   isNotApplicable?: boolean;
   onAddPayment: (payment: RecurringPayment) => void;
+  onSetPayments?: (payments: RecurringPayment[]) => void;
   onUpdatePayment: (id: string, updated: Partial<RecurringPayment>) => void;
   onDeletePayment: (id: string) => void;
   onToggleNA: (isNA: boolean) => void;
@@ -43,12 +47,39 @@ export const RecurringSection: React.FC<RecurringSectionProps> = ({
   isPrivacyMasked,
   isNotApplicable = false,
   onAddPayment,
+  onSetPayments,
   onUpdatePayment,
   onDeletePayment,
   onToggleNA
 }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  const hasExistingData = payments.length > 0;
+
+  const handleApplyStarter = (
+    starter: SectionStarterArchetype<RecurringPayment[]>,
+    mode: 'fill_empty' | 'replace'
+  ) => {
+    const freshPayments = starter.data.map((pay, index) => ({
+      ...pay,
+      id: `r_${Date.now()}_${index}`
+    }));
+
+    if (mode === 'replace' || !hasExistingData) {
+      if (onSetPayments) {
+        onSetPayments(freshPayments);
+      } else {
+        freshPayments.forEach(pay => onAddPayment(pay));
+      }
+    } else {
+      if (onSetPayments) {
+        onSetPayments([...payments, ...freshPayments]);
+      } else {
+        freshPayments.forEach(pay => onAddPayment(pay));
+      }
+    }
+  };
 
   const handleAddNew = (preset?: PresetOption) => {
     const newId = `r_${Date.now()}`;
@@ -59,6 +90,7 @@ export const RecurringSection: React.FC<RecurringSectionProps> = ({
       estimatedAmount: '',
       billingCycle: 'monthly',
       autoPaySource: '',
+      actionOnDeath: preset?.category === 'utility' ? 'must_maintain' : 'cancel_immediately',
       cancellationInstructions: '',
       notes: preset?.notes || ''
     };
@@ -84,6 +116,17 @@ export const RecurringSection: React.FC<RecurringSectionProps> = ({
       <GuidanceTip type="legal-warning" title="Critical Warning: Never Cancel the Mobile Phone Line Immediately">
         <strong>The 2FA Phone Lockout Trap:</strong> Grieving families often cancel the decedent's cell phone line to stop monthly charges. <em>Do not do this.</em> All banks, Google, Apple ID, and email recovery portals send SMS verification codes to that phone. Keep the line active for at least 6 months.
       </GuidanceTip>
+
+      {/* 1-Click Household & Bill Continuity Starters */}
+      <SectionStarterBanner
+        title="1-Click Bill & Continuity Starters"
+        badge="Homeowner vs. Renter Baseline"
+        description="Knowing which bills must be kept active versus cancelled immediately is vital for executors. Select a living situation below to generate a pre-tagged checklist in one click:"
+        starters={RECURRING_STARTERS}
+        onApply={handleApplyStarter}
+        hasExistingData={hasExistingData}
+        defaultExpanded={!hasExistingData}
+      />
 
       {/* Quick-Add Presets */}
       <div className="quick-presets-wrapper no-print">
@@ -179,6 +222,36 @@ export const RecurringSection: React.FC<RecurringSectionProps> = ({
                     </div>
 
                     <div className="form-group form-grid-full">
+                      <label className="form-label" style={{ fontWeight: 700 }}>Continuity Action for Executor Upon Death</label>
+                      <select
+                        className="form-select"
+                        value={pay.actionOnDeath || ''}
+                        onChange={e => onUpdatePayment(pay.id, { actionOnDeath: e.target.value as RecurringPayment['actionOnDeath'] })}
+                      >
+                        <option value="">Select Action for Executor...</option>
+                        <option value="must_maintain">🟢 CRITICAL: Must Maintain (Heat, Power, Water, Insurance, Mortgage, 2FA Phone)</option>
+                        <option value="cancel_immediately">🛑 CANCEL: Cancel Immediately (Streaming, Gym, Non-essential subscriptions)</option>
+                        <option value="review_with_counsel">⚖️ REVIEW: Review with Estate Attorney before paying or canceling</option>
+                        <option value="claim_against_estate">📄 PROBATE: Unsecured debt (Do NOT pay from personal funds; file claim with estate)</option>
+                      </select>
+                      <PresetChips
+                        options={CONTINUITY_ACTION_PRESETS}
+                        onSelect={val => {
+                          const v = val.value.toLowerCase();
+                          if (v.includes('maintain') || v.includes('keep active')) {
+                            onUpdatePayment(pay.id, { actionOnDeath: 'must_maintain' });
+                          } else if (v.includes('cancel') || v.includes('terminate')) {
+                            onUpdatePayment(pay.id, { actionOnDeath: 'cancel_immediately' });
+                          } else if (v.includes('probate') || v.includes('settle')) {
+                            onUpdatePayment(pay.id, { actionOnDeath: 'claim_against_estate' });
+                          } else if (v.includes('review')) {
+                            onUpdatePayment(pay.id, { actionOnDeath: 'review_with_counsel' });
+                          }
+                        }}
+                      />
+                    </div>
+
+                    <div className="form-group form-grid-full">
                       <label className="form-label">How to Cancel / Instructions for Executor</label>
                       <input
                         type="text"
@@ -228,6 +301,26 @@ export const RecurringSection: React.FC<RecurringSectionProps> = ({
                         <span className="role-tag">
                           {CATEGORIES.find(c => c.value === pay.category)?.label.split(' ')[0] || pay.category}
                         </span>
+                        {pay.actionOnDeath === 'must_maintain' && (
+                          <span className="category-tag tag-complete" style={{ fontWeight: 700 }}>
+                            🟢 Must Maintain
+                          </span>
+                        )}
+                        {pay.actionOnDeath === 'cancel_immediately' && (
+                          <span className="category-tag" style={{ background: 'rgba(220, 38, 38, 0.1)', color: 'var(--accent-danger)', borderColor: 'rgba(220, 38, 38, 0.25)', fontWeight: 700 }}>
+                            🛑 Cancel Immediately
+                          </span>
+                        )}
+                        {pay.actionOnDeath === 'review_with_counsel' && (
+                          <span className="category-tag" style={{ background: 'rgba(234, 179, 8, 0.1)', color: 'var(--accent-warning)', borderColor: 'rgba(234, 179, 8, 0.25)', fontWeight: 700 }}>
+                            ⚖️ Review with Counsel
+                          </span>
+                        )}
+                        {pay.actionOnDeath === 'claim_against_estate' && (
+                          <span className="category-tag" style={{ background: 'rgba(100, 116, 139, 0.1)', color: 'var(--text-secondary)', borderColor: 'rgba(100, 116, 139, 0.25)', fontWeight: 700 }}>
+                            📄 Settle via Estate
+                          </span>
+                        )}
                         {pay.estimatedAmount && (
                           <span className="identifier-tag">
                             {isPrivacyMasked ? '••••' : pay.estimatedAmount} ({pay.billingCycle})

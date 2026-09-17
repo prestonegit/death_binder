@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   CheckSquare, Square, ArrowRight, 
-  Clock, ShieldAlert, ChevronDown, ChevronUp, Printer
+  Clock, ShieldAlert, ChevronDown, ChevronUp, Printer, FileText
 } from 'lucide-react';
 import { EXECUTOR_CHECKLIST_PHASES, type ChecklistTask } from '../../data/executorChecklist';
 import { GuidanceTip } from '../common/GuidanceTip';
@@ -44,9 +44,12 @@ export const ExecutorChecklistSection: React.FC<ExecutorChecklistSectionProps> =
     setExpandedTasks(prev => ({ ...prev, [taskId]: !prev[taskId] }));
   };
 
-  const totalTaskCount = EXECUTOR_CHECKLIST_PHASES.reduce((acc, p) => acc + p.tasks.length, 0);
+  const totalTaskCount = EXECUTOR_CHECKLIST_PHASES.reduce(
+    (acc, phase) => acc + phase.tasks.length, 
+    0
+  );
+
   const completedTaskCount = Object.values(completedTasks).filter(Boolean).length;
-  const progressPercent = Math.round((completedTaskCount / totalTaskCount) * 100);
 
   return (
     <div className="section-content-container">
@@ -63,22 +66,24 @@ export const ExecutorChecklistSection: React.FC<ExecutorChecklistSectionProps> =
           </p>
         </div>
 
-        <div className="checklist-progress-card">
-          <div className="progress-stat">
-            <span className="progress-number">{completedTaskCount} of {totalTaskCount}</span>
-            <span className="progress-label">Tasks Completed</span>
+        <div className="checklist-docket-card">
+          <div className="docket-status-header">
+            <FileText size={16} className="docket-icon" />
+            <span>Administrative Docket</span>
           </div>
-          <div className="progress-bar-wrap">
-            <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
+          <div className="docket-count-row">
+            <span className="docket-count">{completedTaskCount} of {totalTaskCount}</span>
+            <span className="docket-subtext">Directives Handled</span>
           </div>
-          <button type="button" className="btn btn-secondary no-print" onClick={onOpenPrintModal} style={{ marginTop: '12px' }}>
-            <Printer size={14} /> Print Checklist
+          <p className="docket-hint">Check off directives as proceedings, filings, and notifications occur.</p>
+          <button type="button" className="btn btn-secondary no-print" onClick={onOpenPrintModal}>
+            <Printer size={14} /> Print Complete Checklist
           </button>
         </div>
       </div>
 
-      <GuidanceTip type="legal-warning" title="Primary Rule: Never Pay Estate Debts from Personal Money">
-        Family members frequently rush to pay credit card bills or hospital bills from their own personal funds. <strong>You are not personally liable.</strong> Debts must be paid exclusively by the estate during probate.
+      <GuidanceTip type="legal-warning" title="Primary Protection: Never Pay Estate Debts from Personal Money">
+        Family members frequently rush to pay credit card bills or hospital bills from their own personal funds. <strong>You are generally not personally liable.</strong> Debts must be paid exclusively by the estate in probate order (unless you are a joint co-borrower/co-signer or subject to statutory spousal medical liability laws).
       </GuidanceTip>
 
       {/* 4 Phases Stack */}
@@ -96,7 +101,7 @@ export const ExecutorChecklistSection: React.FC<ExecutorChecklistSectionProps> =
                   <span className="phase-timeframe">{phase.timeframeDescription}</span>
                 </div>
                 <div className="phase-header-right">
-                  <span className="phase-counter">{phaseCompleted} of {phaseTasks.length} Done</span>
+                  <span className="phase-counter">{phaseCompleted} of {phaseTasks.length} Handled</span>
                 </div>
               </div>
 

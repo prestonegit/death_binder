@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Edit3, Check, Landmark, Globe, Shield } from 'lucide-react';
+import { Plus, Trash2, Edit3, Check, Landmark, Globe, Shield, AlertTriangle } from 'lucide-react';
 import type { FinancialAccount } from '../../types';
 import { SectionHeader } from '../common/SectionHeader';
 import { GuidanceTip } from '../common/GuidanceTip';
@@ -7,12 +7,16 @@ import { PrivacyField } from '../common/PrivacyField';
 import { InfoBubble } from '../common/InfoBubble';
 import { PresetChips, type PresetOption } from '../common/PresetChips';
 import { INFO_DEFINITIONS } from '../../data/infoDefinitions';
+import { ACCOUNT_TITLING_PRESETS } from '../../data/philosophyPresets';
+import { SectionStarterBanner } from '../common/SectionStarterBanner';
+import { FINANCIAL_STARTERS, type SectionStarterArchetype } from '../../data/sectionStarters';
 
 interface FinancialSectionProps {
   accounts: FinancialAccount[];
   isPrivacyMasked: boolean;
   isNotApplicable?: boolean;
   onAddAccount: (account: FinancialAccount) => void;
+  onSetAccounts?: (accounts: FinancialAccount[]) => void;
   onUpdateAccount: (id: string, updated: Partial<FinancialAccount>) => void;
   onDeleteAccount: (id: string) => void;
   onToggleNA: (isNA: boolean) => void;
@@ -50,12 +54,39 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
   isPrivacyMasked,
   isNotApplicable = false,
   onAddAccount,
+  onSetAccounts,
   onUpdateAccount,
   onDeleteAccount,
   onToggleNA
 }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  const hasExistingData = accounts.length > 0;
+
+  const handleApplyStarter = (
+    starter: SectionStarterArchetype<FinancialAccount[]>,
+    mode: 'fill_empty' | 'replace'
+  ) => {
+    const freshAccounts = starter.data.map((acc, index) => ({
+      ...acc,
+      id: `f_${Date.now()}_${index}`
+    }));
+
+    if (mode === 'replace' || !hasExistingData) {
+      if (onSetAccounts) {
+        onSetAccounts(freshAccounts);
+      } else {
+        freshAccounts.forEach(acc => onAddAccount(acc));
+      }
+    } else {
+      if (onSetAccounts) {
+        onSetAccounts([...accounts, ...freshAccounts]);
+      } else {
+        freshAccounts.forEach(acc => onAddAccount(acc));
+      }
+    }
+  };
 
   const handleAddNew = (preset?: PresetOption) => {
     const newId = `f_${Date.now()}`;
@@ -64,7 +95,12 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
       institution: preset?.value || '',
       accountType: preset?.category || 'Checking Account',
       accountIdentifier: '',
+      ownershipType: 'sole',
+      immediateLiquidityAccess: false,
       beneficiaryDesignation: '',
+      primaryBeneficiary: '',
+      contingentBeneficiary: '',
+      cardholderRole: '',
       website: preset?.website || '',
       notes: ''
     };
@@ -90,6 +126,17 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
       <GuidanceTip type="security" title="Security Best Practice: Never Record Full Passwords">
         Never write down full account numbers or plain passwords. The <strong>Institution Name</strong> and <strong>Last 4 Digits</strong> gives your executor exactly what they need to claim the funds with an official death certificate without putting you at risk today.
       </GuidanceTip>
+
+      {/* 1-Click Financial Baseline Starters */}
+      <SectionStarterBanner
+        title="1-Click Financial Account Starters"
+        badge="From Family Baseline to Trust Portfolio"
+        description="Not sure which accounts to list or how to structure them? Select a standard financial blueprint below to generate a pre-formatted account foundation with one click, then update with your institutions:"
+        starters={FINANCIAL_STARTERS}
+        onApply={handleApplyStarter}
+        hasExistingData={hasExistingData}
+        defaultExpanded={!hasExistingData}
+      />
 
       {/* Quick-Add Presets */}
       <div className="quick-presets-wrapper no-print">
@@ -146,6 +193,65 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
 
                     <div className="form-group form-grid-half">
                       <div className="label-with-info">
+                        <label className="form-label">Account Ownership Titling</label>
+                        <InfoBubble
+                          title={INFO_DEFINITIONS.account_titling.title}
+                          explanation={INFO_DEFINITIONS.account_titling.explanation}
+                          example={INFO_DEFINITIONS.account_titling.example}
+                        />
+                      </div>
+                      <select
+                        className="form-select"
+                        value={acc.ownershipType || 'sole'}
+                        onChange={e => {
+                          const newType = e.target.value as FinancialAccount['ownershipType'];
+                          onUpdateAccount(acc.id, { 
+                            ownershipType: newType,
+                            immediateLiquidityAccess: newType === 'jtwros' || newType === 'revocable_trust'
+                          });
+                        }}
+                      >
+                        <option value="sole">Sole Owner (Subject to bank freeze pending probate court)</option>
+                        <option value="jtwros">Joint Tenants w/ Survivorship (JTWROS - Day 1 Access)</option>
+                        <option value="revocable_trust">Revocable Living Trust (Trustee Day 1 Access)</option>
+                        <option value="tenancy_in_common">Tenancy in Common (TIC - Share subject to probate)</option>
+                        <option value="business_entity">Business Entity (LLC / Inc. Operating Agreement)</option>
+                        <option value="custodial_utma">Custodial / Minor (UTMA / UGMA)</option>
+                        <option value="other">Other Titling</option>
+                      </select>
+                      <PresetChips
+                        options={ACCOUNT_TITLING_PRESETS}
+                        onSelect={val => {
+                          const v = val.value.toLowerCase();
+                          if (v.includes('jtwros') || v.includes('joint')) {
+                            onUpdateAccount(acc.id, { ownershipType: 'jtwros', immediateLiquidityAccess: true });
+                          } else if (v.includes('trust')) {
+                            onUpdateAccount(acc.id, { ownershipType: 'revocable_trust', immediateLiquidityAccess: true });
+                          } else if (v.includes('sole')) {
+                            onUpdateAccount(acc.id, { ownershipType: 'sole', immediateLiquidityAccess: false });
+                          } else if (v.includes('pod') || v.includes('tod')) {
+                            onUpdateAccount(acc.id, { ownershipType: 'sole', immediateLiquidityAccess: false });
+                          }
+                        }}
+                      />
+                    </div>
+
+                    <div className="form-group form-grid-half">
+                      <label className="checkbox-label" style={{ marginTop: 12, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                        <input
+                          type="checkbox"
+                          checked={!!acc.immediateLiquidityAccess}
+                          onChange={e => onUpdateAccount(acc.id, { immediateLiquidityAccess: e.target.checked })}
+                          style={{ marginTop: 3 }}
+                        />
+                        <span style={{ fontSize: '0.85rem' }}>
+                          ⚡ <strong>Immediate Funeral & Living Liquidity:</strong> Surviving co-owner or trustee has Day 1 access to pay funeral and home bills without waiting for probate.
+                        </span>
+                      </label>
+                    </div>
+
+                    <div className="form-group form-grid-half">
+                      <div className="label-with-info">
                         <label className="form-label">Last 4 Digits of Account</label>
                         <InfoBubble
                           title={INFO_DEFINITIONS.institution_identifiers.title}
@@ -163,22 +269,75 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
 
                     <div className="form-group form-grid-half">
                       <div className="label-with-info">
-                        <label className="form-label">Named Beneficiary (Who receives this account?)</label>
+                        <label className="form-label">Primary Beneficiary (POD / TOD)</label>
                         <InfoBubble
-                          title={INFO_DEFINITIONS.pod_beneficiary.title}
-                          explanation={INFO_DEFINITIONS.pod_beneficiary.explanation}
-                          example={INFO_DEFINITIONS.pod_beneficiary.example}
+                          title={INFO_DEFINITIONS.pod_tod_beneficiary.title}
+                          explanation={INFO_DEFINITIONS.pod_tod_beneficiary.explanation}
+                          example={INFO_DEFINITIONS.pod_tod_beneficiary.example}
                         />
                       </div>
                       <input
                         type="text"
                         className="form-input"
-                        placeholder="e.g. Primary: Eleanor Vance (100%), Contingent: Children"
-                        value={acc.beneficiaryDesignation}
-                        onChange={e => onUpdateAccount(acc.id, { beneficiaryDesignation: e.target.value })}
+                        placeholder="e.g. Eleanor Vance (Spouse) - 100%"
+                        value={acc.primaryBeneficiary || acc.beneficiaryDesignation || ''}
+                        onChange={e => onUpdateAccount(acc.id, { 
+                          primaryBeneficiary: e.target.value,
+                          beneficiaryDesignation: e.target.value
+                        })}
                       />
-                      <span className="form-helper-text">Named beneficiary accounts transfer directly and bypass probate court.</span>
+                      <span className="form-helper-text">Primary recipient who inherits directly upon presentation of death certificate.</span>
                     </div>
+
+                    <div className="form-group form-grid-half">
+                      <div className="label-with-info">
+                        <label className="form-label">Contingent Beneficiary (Secondary)</label>
+                        <InfoBubble
+                          title={INFO_DEFINITIONS.contingent_beneficiary.title}
+                          explanation={INFO_DEFINITIONS.contingent_beneficiary.explanation}
+                          example={INFO_DEFINITIONS.contingent_beneficiary.example}
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="e.g. Children equally (50% each) or Jane Doe (Sibling)"
+                        value={acc.contingentBeneficiary || ''}
+                        onChange={e => onUpdateAccount(acc.id, { contingentBeneficiary: e.target.value })}
+                      />
+                      <span className="form-helper-text">Inherits if the primary beneficiary passes away first. Prevents probate lapse.</span>
+                    </div>
+
+                    {acc.accountType === 'Credit Card' && (
+                      <div className="form-group form-grid-full" style={{ background: 'rgba(234, 179, 8, 0.08)', padding: 12, borderRadius: 6, border: '1px solid rgba(234, 179, 8, 0.25)' }}>
+                        <div className="label-with-info">
+                          <label className="form-label" style={{ fontWeight: 700 }}>Cardholder Role & Post-Mortem Debt Liability</label>
+                          <InfoBubble
+                            title={INFO_DEFINITIONS.credit_card_authorized_user.title}
+                            explanation={INFO_DEFINITIONS.credit_card_authorized_user.explanation}
+                            example={INFO_DEFINITIONS.credit_card_authorized_user.example}
+                          />
+                        </div>
+                        <select
+                          className="form-select"
+                          value={acc.cardholderRole || ''}
+                          onChange={e => onUpdateAccount(acc.id, { cardholderRole: e.target.value as FinancialAccount['cardholderRole'] })}
+                        >
+                          <option value="">Select Cardholder Role...</option>
+                          <option value="primary">Primary Cardholder (Sole liable party; account freezes upon notification)</option>
+                          <option value="joint_co_borrower">Joint Co-Borrower (Both parties legally liable for balance)</option>
+                          <option value="authorized_user">Authorized User (No legal liability for debt, but card cannot be used after death)</option>
+                        </select>
+                        {acc.cardholderRole === 'authorized_user' && (
+                          <div style={{ marginTop: 8, fontSize: '0.82rem', color: 'var(--accent-warning)', display: 'flex', gap: 6, alignItems: 'flex-start' }}>
+                            <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 2 }} />
+                            <span>
+                              <strong>Statutory Warning:</strong> Authorized users are NOT owners of the account. Under federal credit agreements, authorized user cards must <strong>STOP being used immediately</strong> upon the primary cardholder's death. Using an authorized card after death constitutes unauthorized charges.
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className="form-group form-grid-half">
                       <label className="form-label">Website or Login Portal</label>
@@ -228,6 +387,20 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
                       <div className="display-title-group">
                         <h4>{acc.institution || <span className="unnamed-placeholder">Unnamed Institution</span>}</h4>
                         <span className="role-tag">{acc.accountType}</span>
+                        {acc.ownershipType === 'jtwros' && (
+                          <span className="category-tag tag-complete">JTWROS (Day 1 Access)</span>
+                        )}
+                        {acc.ownershipType === 'revocable_trust' && (
+                          <span className="category-tag tag-complete">Living Trust</span>
+                        )}
+                        {acc.ownershipType === 'sole' && (
+                          <span className="category-tag">Sole Account</span>
+                        )}
+                        {acc.immediateLiquidityAccess && (
+                          <span className="category-tag tag-complete" title="Provides Day 1 liquidity for mortuary and urgent bills">
+                            ⚡ Day 1 Liquidity
+                          </span>
+                        )}
                         {acc.accountIdentifier && (
                           <span className="identifier-tag">
                             {isPrivacyMasked ? '••••••••' : acc.accountIdentifier}
@@ -279,10 +452,22 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
 
                     <div className="display-card-body">
                       <div className="contact-details-grid">
-                        {acc.beneficiaryDesignation && (
+                        {(acc.primaryBeneficiary || acc.beneficiaryDesignation) && (
                           <div className="detail-item full-width">
                             <Shield size={14} className="detail-icon" />
-                            <span><strong>Named Beneficiary:</strong> {acc.beneficiaryDesignation}</span>
+                            <span><strong>Primary Beneficiary:</strong> {acc.primaryBeneficiary || acc.beneficiaryDesignation}</span>
+                          </div>
+                        )}
+                        {acc.contingentBeneficiary && (
+                          <div className="detail-item full-width">
+                            <Shield size={14} className="detail-icon" />
+                            <span><strong>Contingent Beneficiary:</strong> {acc.contingentBeneficiary}</span>
+                          </div>
+                        )}
+                        {acc.cardholderRole && (
+                          <div className="detail-item">
+                            <AlertTriangle size={14} className="detail-icon" />
+                            <span><strong>Cardholder Role:</strong> {acc.cardholderRole === 'authorized_user' ? 'Authorized User (Stop use at death)' : acc.cardholderRole === 'joint_co_borrower' ? 'Joint Co-Borrower' : 'Primary Account Holder'}</span>
                           </div>
                         )}
                         {acc.website && (

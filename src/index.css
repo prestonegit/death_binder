@@ -729,9 +729,8 @@ body.dark-mode .btn-primary {
 }
 
 .binder-notice-box {
-  background: rgba(146, 64, 14, 0.05);
-  border: 1px solid rgba(146, 64, 14, 0.2);
-  border-left: 4px solid var(--accent-amber);
+  background: rgba(146, 64, 14, 0.04);
+  border: 1px solid rgba(146, 64, 14, 0.25);
   border-radius: 6px;
   padding: 14px 18px;
   display: flex;
@@ -1110,6 +1109,55 @@ body.dark-mode .btn-primary {
   color: var(--text-ink);
 }
 
+/* Progressive Disclosure Toggle Banners */
+.progressive-disclosure-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  margin-top: 12px;
+}
+
+.disclosure-prompt-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-ink);
+}
+
+.disclosure-toggle-buttons {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.disclosure-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.disclosure-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text-ink);
+}
+
+.disclosure-btn.active {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: var(--bg-card);
+  font-weight: 600;
+}
+
 /* Quick-Add Chips */
 .quick-presets-wrapper {
   padding: 12px 16px;
@@ -1118,34 +1166,64 @@ body.dark-mode .btn-primary {
   border-radius: 6px;
 }
 
-.preset-chips-title {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-bottom: 8px;
+.preset-chips-container {
+  margin-top: 6px;
 }
 
+.preset-chips-title {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.preset-chips-list,
 .preset-chips-row {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  align-items: center;
 }
 
-.preset-chip {
+.preset-chip,
+.preset-chip-btn {
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   border-radius: 4px;
-  padding: 4px 10px;
-  font-size: 0.8rem;
+  padding: 4px 9px;
+  font-size: 0.78rem;
   color: var(--text-secondary);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   transition: all 0.12s ease;
+  font-family: inherit;
 }
 
-.preset-chip:hover {
+.preset-chip:hover,
+.preset-chip-btn:hover {
   background: var(--accent-primary);
   color: var(--bg-card);
   border-color: var(--accent-primary);
+}
+
+.preset-chip-plus {
+  opacity: 0.6;
+}
+
+.preset-chip-toggle {
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.preset-chip-toggle:hover {
+  background: var(--bg-subtle);
+  color: var(--text-ink);
+  border-color: var(--border-strong);
 }
 
 /* ==========================================================================
@@ -1277,20 +1355,18 @@ body.dark-mode .btn-primary {
 }
 
 .guidance-legal-warning {
-  background: rgba(153, 27, 27, 0.03);
-  border-color: rgba(153, 27, 27, 0.2);
-  border-left: 4px solid var(--accent-danger);
+  background: rgba(153, 27, 27, 0.035);
+  border: 1px solid rgba(153, 27, 27, 0.22);
 }
 
 .guidance-security {
-  background: rgba(146, 64, 14, 0.03);
-  border-color: rgba(146, 64, 14, 0.2);
-  border-left: 4px solid var(--accent-amber);
+  background: rgba(146, 64, 14, 0.035);
+  border: 1px solid rgba(146, 64, 14, 0.22);
 }
 
 .guidance-info {
   background: var(--bg-card);
-  border-left: 4px solid var(--accent-primary);
+  border: 1px solid var(--border-subtle);
 }
 
 .guidance-header {
@@ -1435,9 +1511,64 @@ body.dark-mode .btn-primary {
 
 .progress-bar-fill {
   height: 100%;
+  width: 100%;
   background: var(--accent-success);
   border-radius: 3px;
-  transition: width 0.3s ease;
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dignified Administrative Docket Card */
+.checklist-docket-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 16px 20px;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.docket-status-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.docket-icon {
+  color: var(--accent-primary);
+}
+
+.docket-count-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.docket-count {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-ink);
+}
+
+.docket-subtext {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.docket-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 2px 0 8px 0;
+  line-height: 1.4;
 }
 
 .phases-stack {
@@ -1818,6 +1949,322 @@ body.dark-mode .nav-footer-btn-primary {
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.modal-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-subtle);
+  color: var(--text-ink);
+}
+
+.modal-alert.error {
+  background: rgba(180, 40, 40, 0.08);
+  border-color: rgba(180, 40, 40, 0.25);
+  color: #a32222;
+}
+
+.modal-alert.success {
+  background: rgba(40, 140, 70, 0.08);
+  border-color: rgba(40, 140, 70, 0.25);
+  color: #1f6b39;
+}
+
+.backup-preview-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.backup-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 8px;
+}
+
+.backup-preview-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-ink);
+}
+
+.backup-preview-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+  font-size: 0.85rem;
+}
+
+.backup-preview-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.backup-preview-meta-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.backup-preview-meta-value {
+  color: var(--text-ink);
+  font-weight: 500;
+}
+
+.backup-preview-safety-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(212, 163, 89, 0.12);
+  border: 1px solid rgba(212, 163, 89, 0.3);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--text-ink);
+}
+
+/* Philosophy Archetypes & Universal Section Starters */
+.philosophy-starter-card,
+.section-starter-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.section-starter-header {
+  margin-bottom: 0;
+}
+
+.section-starter-toggle-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: inherit;
+  text-align: left;
+}
+
+.section-starter-title-wrap,
+.philosophy-starter-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-ink);
+  flex-wrap: wrap;
+}
+
+.starter-icon {
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.starter-toggle-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.section-starter-body {
+  margin-top: 10px;
+}
+
+.starter-preview-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.starter-preview-pill {
+  font-size: 0.74rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 2px 8px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.starter-apply-btn {
+  min-height: 40px;
+  white-space: nowrap;
+}
+
+.starter-confirm-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-left: 4px solid var(--accent-primary);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.philosophy-starter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.archetype-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.archetype-card {
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-subtle);
+  border-radius: 6px;
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  text-align: left;
+}
+
+.archetype-card:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+}
+
+.archetype-card.selected {
+  border-color: var(--accent-primary);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.archetype-badge {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+
+.archetype-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-ink);
+}
+
+.archetype-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.archetype-apply-bar {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.archetype-apply-summary {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+}
+
+/* Quality of Life Threshold Checkboxes */
+.threshold-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.threshold-checkbox-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.threshold-checkbox-item:hover {
+  background: var(--bg-hover);
+}
+
+.threshold-checkbox-item input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--accent-primary);
+}
+
+.threshold-checkbox-label {
+  font-size: 0.85rem;
+  color: var(--text-ink);
+  line-height: 1.4;
+}
+
+/* Hospice Crisis Callout */
+.hospice-emergency-callout {
+  background: rgba(153, 27, 27, 0.04);
+  border: 1px solid rgba(153, 27, 27, 0.25);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hospice-callout-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #991b1b;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.hospice-phone-box {
+  background: var(--bg-card);
+  border: 1px solid rgba(153, 27, 27, 0.3);
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #991b1b;
+  display: inline-block;
+  margin: 4px 0;
 }
 
 .print-mode-options {

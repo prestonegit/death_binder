@@ -6,7 +6,10 @@ import type {
   LegalDocuments, 
   MedicalProfile, 
   TaxVitalRecords, 
-  LegacyMemories 
+  LegacyMemories,
+  FinancialAccount,
+  RecurringPayment,
+  QualityOfLifeBoundaries
 } from '../types';
 
 export const createEmptyPersonalInfo = (): PersonalInfo => ({
@@ -24,9 +27,18 @@ export const createEmptyPersonalInfo = (): PersonalInfo => ({
 
 export const createEmptyEmergencyPlan = (): EmergencyPlan => ({
   primaryEmergencyContact: '',
+  medicalDecisionMakerContact: '',
+  primaryExecutorContact: '',
   secondaryEmergencyContact: '',
   funeralHomePreference: '',
+  funeralFundingMethod: '',
+  funeralContractNumberOrRef: '',
+  immediateCashBufferLocation: '',
   hospiceOrDoctorContact: '',
+  isHospiceEnrolled: false,
+  hospice24hTriageNumber: '',
+  hospiceComfortKitLocation: '',
+  outOfHospitalDnrLocation: '',
   immediatePetCare: '',
   originalWillLocation: '',
   immediateAccessCodes: '',
@@ -42,16 +54,24 @@ export const createEmptyLegalDocuments = (): LegalDocuments => ({
   trustees: '',
   financialPoaLocation: '',
   financialPoaAgent: '',
+  financialPoaAlternate: '',
   healthcareProxyLocation: '',
   healthcareProxyAgent: '',
+  healthcareProxyAlternate: '',
   livingWillLocation: '',
   dnrPolstLocation: '',
   hipaaReleaseLocation: '',
+  hipaaAuthorizedAgents: '',
   safeDepositBoxBank: '',
   safeDepositBoxLocation: '',
   safeDepositBoxKeyLocation: '',
   safeDepositBoxCoSigners: '',
   disposition: '',
+  dispositionBackupPlan: '',
+  designatedDispositionAgent: '',
+  dispositionAuthorizationFormLocation: '',
+  preNeedContractNumber: '',
+  preNeedFuneralHome: '',
   funeralHomePreference: '',
   serviceWishes: '',
   eulogyNotes: '',
@@ -68,6 +88,31 @@ export const createEmptyMedicalProfile = (): MedicalProfile => ({
   specialists: '',
   preferredHospital: '',
   organDonor: 'undecided',
+  codeStatus: '',
+  ventilationSupport: '',
+  artificialNutritionHydration: '',
+  painManagementPhilosophy: '',
+  terminalCareLocationPreference: '',
+  dialysisWishes: '',
+  pacemakerIcdDeactivationWishes: '',
+  diagnosticIntensityWishes: '',
+  qualityOfLife: {
+    stopIfCannotRecognizeFamily: false,
+    stopIfCannotCommunicate: false,
+    stopIfPermanentlyBedbound: false,
+    stopIfPermanentComa: false,
+    stopIfPermanentVentilator: false,
+    stopIfIntractableSuffering: false,
+    personalThresholdNotes: '',
+  },
+  hasSignedPolstMolst: '',
+  polstPhysicalLocation: '',
+  isEnrolledInHospice: false,
+  hospiceAgencyName: '',
+  hospiceEmergency24hPhone: '',
+  hospiceComfortKitLocation: '',
+  wholeBodyDonationProgram: '',
+  wholeBodyDonorRegistrationNumber: '',
   notes: '',
 });
 
@@ -202,13 +247,53 @@ export function migrateBinderData(raw: unknown): LegacyBinderData {
         };
       }),
       legalDocuments: legalDocs,
-      financialAccounts: Array.isArray(p.financialAccounts) ? p.financialAccounts : [],
-      recurringPayments: Array.isArray(p.recurringPayments) ? p.recurringPayments : [],
+      financialAccounts: Array.isArray(p.financialAccounts)
+        ? p.financialAccounts.map((a: unknown, idx: number) => {
+            const acc = (a || {}) as Record<string, unknown>;
+            return {
+              id: typeof acc.id === 'string' ? acc.id : `f_${idx}_${Date.now()}`,
+              institution: typeof acc.institution === 'string' ? acc.institution : '',
+              accountType: typeof acc.accountType === 'string' ? acc.accountType : 'Checking Account',
+              accountIdentifier: typeof acc.accountIdentifier === 'string' ? acc.accountIdentifier : '',
+              ownershipType: typeof acc.ownershipType === 'string' ? (acc.ownershipType as FinancialAccount['ownershipType']) : 'sole',
+              immediateLiquidityAccess: typeof acc.immediateLiquidityAccess === 'boolean' ? acc.immediateLiquidityAccess : acc.ownershipType === 'jtwros',
+              beneficiaryDesignation: typeof acc.beneficiaryDesignation === 'string' ? acc.beneficiaryDesignation : '',
+              primaryBeneficiary: typeof acc.primaryBeneficiary === 'string' ? acc.primaryBeneficiary : (typeof acc.beneficiaryDesignation === 'string' ? acc.beneficiaryDesignation : ''),
+              contingentBeneficiary: typeof acc.contingentBeneficiary === 'string' ? acc.contingentBeneficiary : '',
+              cardholderRole: typeof acc.cardholderRole === 'string' ? (acc.cardholderRole as FinancialAccount['cardholderRole']) : '',
+              website: typeof acc.website === 'string' ? acc.website : '',
+              notes: typeof acc.notes === 'string' ? acc.notes : '',
+            };
+          })
+        : [],
+      recurringPayments: Array.isArray(p.recurringPayments)
+        ? p.recurringPayments.map((r: unknown, idx: number) => {
+            const rec = (r || {}) as Record<string, unknown>;
+            return {
+              id: typeof rec.id === 'string' ? rec.id : `r_${idx}_${Date.now()}`,
+              name: typeof rec.name === 'string' ? rec.name : '',
+              category: typeof rec.category === 'string' ? (rec.category as RecurringPayment['category']) : 'other',
+              estimatedAmount: typeof rec.estimatedAmount === 'string' ? rec.estimatedAmount : '',
+              billingCycle: typeof rec.billingCycle === 'string' ? (rec.billingCycle as RecurringPayment['billingCycle']) : 'monthly',
+              dueDayOfMonth: typeof rec.dueDayOfMonth === 'string' ? rec.dueDayOfMonth : '',
+              autoPaySource: typeof rec.autoPaySource === 'string' ? rec.autoPaySource : '',
+              actionOnDeath: typeof rec.actionOnDeath === 'string' ? (rec.actionOnDeath as RecurringPayment['actionOnDeath']) : '',
+              cancellationInstructions: typeof rec.cancellationInstructions === 'string' ? rec.cancellationInstructions : '',
+              notes: typeof rec.notes === 'string' ? rec.notes : '',
+            };
+          })
+        : [],
       assets: Array.isArray(p.assets) ? p.assets : [],
       insurancePolicies: Array.isArray(p.insurancePolicies) ? p.insurancePolicies : [],
       medicalProfile: {
         ...createEmptyMedicalProfile(),
-        ...(typeof p.medicalProfile === 'object' ? (p.medicalProfile as Record<string, string>) : {})
+        ...(typeof p.medicalProfile === 'object' ? (p.medicalProfile as Record<string, unknown>) : {}),
+        qualityOfLife: {
+          ...createEmptyMedicalProfile().qualityOfLife!,
+          ...((typeof (p.medicalProfile as Record<string, unknown>)?.qualityOfLife === 'object'
+            ? ((p.medicalProfile as Record<string, unknown>).qualityOfLife as Record<string, unknown>)
+            : {}) as Partial<QualityOfLifeBoundaries>)
+        }
       },
       digitalAccounts: Array.isArray(p.digitalAccounts) ? p.digitalAccounts : [],
       taxVitalRecords: {

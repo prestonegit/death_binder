@@ -6,11 +6,14 @@ import { GuidanceTip } from '../common/GuidanceTip';
 import { InfoBubble } from '../common/InfoBubble';
 import { PresetChips, type PresetOption } from '../common/PresetChips';
 import { INFO_DEFINITIONS } from '../../data/infoDefinitions';
+import { SectionStarterBanner } from '../common/SectionStarterBanner';
+import { CONTACTS_STARTERS, type SectionStarterArchetype } from '../../data/sectionStarters';
 
 interface ContactsSectionProps {
   contacts: Contact[];
   isNotApplicable?: boolean;
   onAddContact: (contact: Contact) => void;
+  onSetContacts?: (contacts: Contact[]) => void;
   onUpdateContact: (id: string, updated: Partial<Contact>) => void;
   onDeleteContact: (id: string) => void;
   onToggleNA: (isNA: boolean) => void;
@@ -46,12 +49,39 @@ export const ContactsSection: React.FC<ContactsSectionProps> = ({
   contacts,
   isNotApplicable = false,
   onAddContact,
+  onSetContacts,
   onUpdateContact,
   onDeleteContact,
   onToggleNA
 }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  const hasExistingData = contacts.length > 0;
+
+  const handleApplyStarter = (
+    starter: SectionStarterArchetype<Contact[]>,
+    mode: 'fill_empty' | 'replace'
+  ) => {
+    const freshContacts = starter.data.map((c, index) => ({
+      ...c,
+      id: `c_${Date.now()}_${index}`
+    }));
+
+    if (mode === 'replace' || !hasExistingData) {
+      if (onSetContacts) {
+        onSetContacts(freshContacts);
+      } else {
+        freshContacts.forEach(c => onAddContact(c));
+      }
+    } else {
+      if (onSetContacts) {
+        onSetContacts([...contacts, ...freshContacts]);
+      } else {
+        freshContacts.forEach(c => onAddContact(c));
+      }
+    }
+  };
 
   const handleAddNew = (preset?: PresetOption) => {
     const newId = `c_${Date.now()}`;
@@ -86,6 +116,17 @@ export const ContactsSection: React.FC<ContactsSectionProps> = ({
       <GuidanceTip type="info" title="Why Immediate Contact Details Are Crucial">
         Having phone numbers and email addresses readily accessible allows family to notify your estate attorney, CPA, and designated guardians without searching through personal address books.
       </GuidanceTip>
+
+      {/* 1-Click Advisors & Contacts Starters */}
+      <SectionStarterBanner
+        title="1-Click Advisors & Contacts Starters"
+        badge="Family Circle vs. Advisory Team"
+        description="Who needs to be in your corner? Select a foundational contact blueprint below to pre-fill key roles (executor, healthcare agent, physician, CPA, attorney) in one click:"
+        starters={CONTACTS_STARTERS}
+        onApply={handleApplyStarter}
+        hasExistingData={hasExistingData}
+        defaultExpanded={!hasExistingData}
+      />
 
       <div className="quick-presets-wrapper no-print">
         <PresetChips

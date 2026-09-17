@@ -20,10 +20,33 @@ export const PrintEmergencySheet: React.FC<PrintEmergencySheetProps> = ({
         <span className="print-date">Generated: {new Date().toLocaleDateString()}</span>
       </div>
 
-      <div className="print-sleeve-insert-box" style={{ marginBottom: '12px', marginTop: '0' }}>
+      <div className="print-sleeve-insert-box" style={{ marginBottom: '10px', marginTop: '0' }}>
         <div className="sleeve-badge">📁 PHYSICAL BINDER PLASTIC SLEEVE #0: INSIDE FRONT COVER POCKET</div>
-        <p><strong>Instructions for Preparer:</strong> Place this single-page emergency action sheet, a physical spare key set (house, vehicle, safe), and $200–$500 in emergency delivery cash inside clear Plastic Sleeve #0 in the front inside pocket of your 3-ring binder.</p>
+        <p><strong>Instructions for Preparer:</strong> Place this single-page emergency action sheet, a physical spare key set (house, vehicle, safe), and emergency cash inside clear Plastic Sleeve #0 in the front inside pocket of your 3-ring binder.</p>
       </div>
+
+      {/* Hospice Callout if Enrolled */}
+      {emergencyPlan.isHospiceEnrolled && (
+        <div className="print-emergency-callout" style={{ background: '#fef2f2', borderColor: '#b91c1c', color: '#7f1d1d', marginBottom: '10px', padding: '8px 12px' }}>
+          <strong style={{ color: '#991b1b', fontSize: '9.5pt' }}>🚨 ACTIVE HOSPICE ENROLLMENT — DO NOT CALL 911:</strong>
+          <p style={{ margin: '2px 0', fontSize: '8pt', lineHeight: 1.3 }}>
+            Calling 911 initiates mandatory CPR, intubation, and emergency transport. In any pain spike, breathing crisis, or passing, call the 24/7 Hospice Nurse Hotline directly.
+          </p>
+          <div style={{ fontWeight: 700, fontSize: '10.5pt', color: '#991b1b' }}>
+            📞 24/7 Hospice Hotline: {emergencyPlan.hospice24hTriageNumber || emergencyPlan.hospiceOrDoctorContact || 'See Hospice Contact'}
+          </div>
+          {emergencyPlan.hospiceComfortKitLocation && (
+            <div style={{ fontSize: '7.5pt', marginTop: '2px' }}>
+              <strong>Comfort Kit (E-Kit) Location:</strong> {emergencyPlan.hospiceComfortKitLocation}
+            </div>
+          )}
+          {emergencyPlan.outOfHospitalDnrLocation && (
+            <div style={{ fontSize: '7.5pt', marginTop: '2px' }}>
+              <strong>Out-of-Hospital DNR / POLST Location:</strong> {emergencyPlan.outOfHospitalDnrLocation}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="print-emergency-callout">
         <strong>CRITICAL LEGAL NOTICE FOR FAMILY & EXECUTOR:</strong>
@@ -33,24 +56,35 @@ export const PrintEmergencySheet: React.FC<PrintEmergencySheetProps> = ({
       <div className="print-grid-2col">
         {/* Urgent Contacts */}
         <div className="print-box">
-          <h3>1. Immediate Contacts & Notifications</h3>
+          <h3>1. Immediate Decision Makers & Contacts</h3>
           <table className="print-table">
             <tbody>
               <tr>
-                <td className="label-cell">Primary Emergency Contact / Executor:</td>
-                <td className="value-cell bold">{emergencyPlan.primaryEmergencyContact || '—'}</td>
+                <td className="label-cell">Pre-Death Healthcare Proxy:</td>
+                <td className="value-cell bold">{emergencyPlan.medicalDecisionMakerContact || emergencyPlan.primaryEmergencyContact || '—'}</td>
+              </tr>
+              <tr>
+                <td className="label-cell">Post-Death Named Executor:</td>
+                <td className="value-cell bold">{emergencyPlan.primaryExecutorContact || emergencyPlan.primaryEmergencyContact || '—'}</td>
               </tr>
               <tr>
                 <td className="label-cell">Secondary / Alternate Contact:</td>
                 <td className="value-cell">{emergencyPlan.secondaryEmergencyContact || '—'}</td>
               </tr>
               <tr>
-                <td className="label-cell">Primary Physician / Hospice:</td>
+                <td className="label-cell">Physician / Medical Clinic:</td>
                 <td className="value-cell">{emergencyPlan.hospiceOrDoctorContact || medicalProfile.primaryPhysician || '—'}</td>
               </tr>
               <tr>
-                <td className="label-cell">Preferred Funeral Home:</td>
-                <td className="value-cell">{emergencyPlan.funeralHomePreference || legalDocuments.funeralHomePreference || '—'}</td>
+                <td className="label-cell">Funeral Home & Pre-Need Ref:</td>
+                <td className="value-cell">
+                  {emergencyPlan.funeralHomePreference || legalDocuments.funeralHomePreference || '—'}
+                  {emergencyPlan.funeralContractNumberOrRef ? ` (Ref: ${emergencyPlan.funeralContractNumberOrRef})` : ''}
+                </td>
+              </tr>
+              <tr>
+                <td className="label-cell">Designated Disposition Agent:</td>
+                <td className="value-cell">{legalDocuments.designatedDispositionAgent || 'Family / Next of Kin'}</td>
               </tr>
             </tbody>
           </table>
@@ -58,12 +92,24 @@ export const PrintEmergencySheet: React.FC<PrintEmergencySheetProps> = ({
 
         {/* Immediate Access */}
         <div className="print-box">
-          <h3>2. Critical Physical Access & Documents</h3>
+          <h3>2. Critical Physical Access & Liquidity</h3>
           <table className="print-table">
             <tbody>
               <tr>
                 <td className="label-cell">Original Signed Will Location:</td>
                 <td className="value-cell bold">{emergencyPlan.originalWillLocation || legalDocuments.willLocation || '—'}</td>
+              </tr>
+              <tr>
+                <td className="label-cell">Day 1 Funeral Cash Buffer ($5k–$15k):</td>
+                <td className="value-cell bold">
+                  {maskSensitive && emergencyPlan.immediateCashBufferLocation
+                    ? '•••••••• (Masked on Print)'
+                    : emergencyPlan.immediateCashBufferLocation || '—'}
+                </td>
+              </tr>
+              <tr>
+                <td className="label-cell">Funeral Funding Plan:</td>
+                <td className="value-cell">{emergencyPlan.funeralFundingMethod ? emergencyPlan.funeralFundingMethod.replace(/_/g, ' ').toUpperCase() : '—'}</td>
               </tr>
               <tr>
                 <td className="label-cell">Home Keys & Safe Access Codes:</td>
@@ -82,25 +128,47 @@ export const PrintEmergencySheet: React.FC<PrintEmergencySheetProps> = ({
         </div>
       </div>
 
-      <div className="print-box full-width" style={{ marginTop: '12px' }}>
-        <h3>3. Urgent Directives & Organ Donation</h3>
+      {/* Clinical & End of Life Directives */}
+      <div className="print-box full-width" style={{ marginTop: '10px' }}>
+        <h3>3. Clinical Wishes & Advance Directives Summary</h3>
         <table className="print-table">
           <tbody>
             <tr>
-              <td className="label-cell" style={{ width: '220px' }}>Organ Donation & Tissue Directives:</td>
-              <td className="value-cell">
-                {medicalProfile.organDonor === 'yes' ? 'REGISTERED ORGAN DONOR — Act Immediately Upon Death' : emergencyPlan.organDonationUrgentNote || '—'}
+              <td className="label-cell" style={{ width: '220px' }}>Cardiopulmonary Resuscitation (CPR):</td>
+              <td className="value-cell bold">
+                {medicalProfile.codeStatus === 'dnr_natural_death' 
+                  ? 'ALLOW NATURAL DEATH (DNR / Comfort Care Only — No CPR / Shocks)' 
+                  : medicalProfile.codeStatus === 'cpr_full_code'
+                  ? 'FULL CODE (Attempt Resuscitation & Defibrillation)'
+                  : medicalProfile.codeStatus || 'Refer to Living Will'}
               </td>
             </tr>
             <tr>
-              <td className="label-cell">Disposition & Service Wishes:</td>
+              <td className="label-cell">Breathing Machine (Ventilator):</td>
               <td className="value-cell">
-                {legalDocuments.disposition ? `Preference: ${legalDocuments.disposition.toUpperCase()}. ` : ''}
+                {medicalProfile.ventilationSupport === 'time_limited_trial'
+                  ? 'Time-Limited Trial (3–5 days; withdraw if irreversible)'
+                  : medicalProfile.ventilationSupport === 'no_intubation'
+                  ? 'Do Not Intubate (DNI - Natural breathing / comfort only)'
+                  : medicalProfile.ventilationSupport || '—'}
+              </td>
+            </tr>
+            <tr>
+              <td className="label-cell">Nutrition, Hydration & Pain Relief:</td>
+              <td className="value-cell">
+                Nutrition: {medicalProfile.artificialNutritionHydration === 'pleasure_eating_only' ? 'Pleasure Eating Only (No tubes)' : medicalProfile.artificialNutritionHydration || '—'} | Pain Relief: {medicalProfile.painManagementPhilosophy === 'comfort_first' ? 'Comfort First (Full pain relief even if drowsy)' : medicalProfile.painManagementPhilosophy || '—'}
+              </td>
+            </tr>
+            <tr>
+              <td className="label-cell">Organ Donation & Disposition:</td>
+              <td className="value-cell">
+                {medicalProfile.organDonor === 'yes' ? 'REGISTERED ORGAN DONOR. ' : ''}
+                {legalDocuments.disposition ? `Disposition: ${legalDocuments.disposition.toUpperCase()}. ` : ''}
                 {legalDocuments.serviceWishes || '—'}
               </td>
             </tr>
             <tr>
-              <td className="label-cell">Family Guidance Directives:</td>
+              <td className="label-cell">Critical Guidance for Family:</td>
               <td className="value-cell">{emergencyPlan.criticalNotes || '—'}</td>
             </tr>
           </tbody>
@@ -116,3 +184,4 @@ export const PrintEmergencySheet: React.FC<PrintEmergencySheetProps> = ({
     </div>
   );
 };
+

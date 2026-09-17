@@ -263,6 +263,9 @@ export default function App() {
   const addContact = (contact: Contact) => {
     updateActiveProfile({ contacts: [...activeProfile.contacts, contact] });
   };
+  const setContacts = (contacts: Contact[]) => {
+    updateActiveProfile({ contacts });
+  };
   const updateContact = (id: string, updated: Partial<Contact>) => {
     updateActiveProfile({
       contacts: activeProfile.contacts.map(c => c.id === id ? { ...c, ...updated } : c)
@@ -278,6 +281,9 @@ export default function App() {
   const addFinancialAccount = (acc: FinancialAccount) => {
     updateActiveProfile({ financialAccounts: [...activeProfile.financialAccounts, acc] });
   };
+  const setFinancialAccounts = (accounts: FinancialAccount[]) => {
+    updateActiveProfile({ financialAccounts: accounts });
+  };
   const updateFinancialAccount = (id: string, updated: Partial<FinancialAccount>) => {
     updateActiveProfile({
       financialAccounts: activeProfile.financialAccounts.map(a => a.id === id ? { ...a, ...updated } : a)
@@ -292,6 +298,9 @@ export default function App() {
   // Recurring Payments Handlers
   const addRecurringPayment = (pay: RecurringPayment) => {
     updateActiveProfile({ recurringPayments: [...activeProfile.recurringPayments, pay] });
+  };
+  const setRecurringPayments = (payments: RecurringPayment[]) => {
+    updateActiveProfile({ recurringPayments: payments });
   };
   const updateRecurringPayment = (id: string, updated: Partial<RecurringPayment>) => {
     updateActiveProfile({
@@ -337,6 +346,9 @@ export default function App() {
   // Digital Accounts Handlers
   const addDigitalAccount = (acc: DigitalAccount) => {
     updateActiveProfile({ digitalAccounts: [...activeProfile.digitalAccounts, acc] });
+  };
+  const setDigitalAccounts = (accounts: DigitalAccount[]) => {
+    updateActiveProfile({ digitalAccounts: accounts });
   };
   const updateDigitalAccount = (id: string, updated: Partial<DigitalAccount>) => {
     updateActiveProfile({
@@ -456,6 +468,7 @@ export default function App() {
               contacts={activeProfile.contacts}
               isNotApplicable={!!activeProfile.notApplicableSections?.contacts}
               onAddContact={addContact}
+              onSetContacts={setContacts}
               onUpdateContact={updateContact}
               onDeleteContact={deleteContact}
               onToggleNA={isNA => toggleSectionNotApplicable('contacts', isNA)}
@@ -478,6 +491,7 @@ export default function App() {
               isPrivacyMasked={isPrivacyMasked}
               isNotApplicable={!!activeProfile.notApplicableSections?.financial}
               onAddAccount={addFinancialAccount}
+              onSetAccounts={setFinancialAccounts}
               onUpdateAccount={updateFinancialAccount}
               onDeleteAccount={deleteFinancialAccount}
               onToggleNA={isNA => toggleSectionNotApplicable('financial', isNA)}
@@ -490,6 +504,7 @@ export default function App() {
               isPrivacyMasked={isPrivacyMasked}
               isNotApplicable={!!activeProfile.notApplicableSections?.recurring}
               onAddPayment={addRecurringPayment}
+              onSetPayments={setRecurringPayments}
               onUpdatePayment={updateRecurringPayment}
               onDeletePayment={deleteRecurringPayment}
               onToggleNA={isNA => toggleSectionNotApplicable('recurring', isNA)}
@@ -535,6 +550,7 @@ export default function App() {
               isPrivacyMasked={isPrivacyMasked}
               isNotApplicable={!!activeProfile.notApplicableSections?.digital}
               onAddAccount={addDigitalAccount}
+              onSetAccounts={setDigitalAccounts}
               onUpdateAccount={updateDigitalAccount}
               onDeleteAccount={deleteDigitalAccount}
               onToggleNA={isNA => toggleSectionNotApplicable('digital', isNA)}

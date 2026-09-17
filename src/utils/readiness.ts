@@ -24,7 +24,11 @@ export interface BinderIndexSummary {
 export function evaluateSectionReadiness(profile: ProfileData): BinderIndexSummary {
   const na = profile.notApplicableSections || {};
 
-  const hasEmergencyContact = !!profile.emergencyPlan?.primaryEmergencyContact?.trim();
+  const hasEmergencyContact = !!(
+    profile.emergencyPlan?.medicalDecisionMakerContact?.trim() ||
+    profile.emergencyPlan?.primaryEmergencyContact?.trim() ||
+    profile.emergencyPlan?.primaryExecutorContact?.trim()
+  );
   const hasWillLocation = !!profile.emergencyPlan?.originalWillLocation?.trim() || !!profile.legalDocuments?.willLocation?.trim();
 
   const sections: SectionStatus[] = [
@@ -35,8 +39,8 @@ export function evaluateSectionReadiness(profile: ProfileData): BinderIndexSumma
       category: 'Immediate Response',
       isNotApplicable: !!na['emergency'],
       isComplete: !!na['emergency'] || (hasEmergencyContact && hasWillLocation),
-      summary: profile.emergencyPlan?.primaryEmergencyContact 
-        ? `Primary contact: ${profile.emergencyPlan.primaryEmergencyContact}` 
+      summary: profile.emergencyPlan?.medicalDecisionMakerContact || profile.emergencyPlan?.primaryEmergencyContact
+        ? `Primary contact: ${profile.emergencyPlan.medicalDecisionMakerContact || profile.emergencyPlan.primaryEmergencyContact}` 
         : 'Emergency contact and will location needed'
     },
     {
@@ -72,12 +76,15 @@ export function evaluateSectionReadiness(profile: ProfileData): BinderIndexSumma
       category: 'Health & Care',
       isNotApplicable: !!na['medical'],
       isComplete: !!na['medical'] || (
-        !!profile.medicalProfile?.bloodType?.trim() ||
+        !!profile.medicalProfile?.codeStatus ||
+        !!profile.medicalProfile?.ventilationSupport ||
         !!profile.medicalProfile?.primaryPhysician?.trim() ||
         profile.medicalProfile?.organDonor !== 'undecided'
       ),
-      summary: profile.medicalProfile?.primaryPhysician 
-        ? `Physician: Dr. ${profile.medicalProfile.primaryPhysician}` 
+      summary: profile.medicalProfile?.codeStatus 
+        ? `Code Status: ${profile.medicalProfile.codeStatus === 'dnr_natural_death' ? 'Natural / DNR' : 'Full CPR'}` 
+        : profile.medicalProfile?.primaryPhysician
+        ? `Physician: Dr. ${profile.medicalProfile.primaryPhysician}`
         : 'Physician and directives pending'
     },
     {
@@ -89,7 +96,7 @@ export function evaluateSectionReadiness(profile: ProfileData): BinderIndexSumma
       isComplete: !!na['financial'] || profile.financialAccounts.length > 0,
       itemCount: profile.financialAccounts.length,
       summary: profile.financialAccounts.length > 0
-        ? `${profile.financialAccounts.length} account${profile.financialAccounts.length === 1 ? '' : 's'} listed`
+        ? `${profile.financialAccounts.length} account${profile.financialAccounts.length === 1 ? '' : 's'} listed${profile.financialAccounts.some(a => a.immediateLiquidityAccess || a.ownershipType === 'jtwros') ? ' (Liquidity Ready)' : ''}`
         : 'No accounts recorded'
     },
     {

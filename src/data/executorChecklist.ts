@@ -26,12 +26,42 @@ export const EXECUTOR_CHECKLIST_PHASES: ChecklistPhase[] = [
     timeframeDescription: 'Immediate steps upon death or medical crisis',
     tasks: [
       {
+        id: 't_hospice_active_dying',
+        title: 'Managing the Active Dying Vigil (If Enrolled in Hospice)',
+        subtitle: 'CRITICAL: DO NOT call 911 during active dying or breathing pauses',
+        timeframe: 'hours_0_24',
+        priority: 'urgent',
+        binderTabLink: 'emergency',
+        caution: 'Calling 911 triggers sirens, police, and mandatory aggressive resuscitation unless a state-specific Out-of-Hospital DNR is handed to first responders instantly.',
+        instructions: 'When breathing pauses (Cheyne-Stokes), extremities cool, or respiratory secretions sound noisy ("death rattle"): DO NOT dial 911. Call your 24/7 Hospice Triage Nurse (listed in Section 1). Retrieve the Hospice Emergency Comfort Kit from the refrigerator and administer sublingual drops as directed by the on-call nurse.'
+      },
+      {
         id: 't_pronounce',
         title: 'Obtain Official Pronouncement of Death',
         subtitle: 'Call attending physician, hospice nurse, or 911 if at home',
         timeframe: 'hours_0_24',
         priority: 'urgent',
         instructions: 'If death occurs at home with hospice, call the hospice nurse directly. If unexpected, call 911. The attending medical professional or medical examiner will sign the official pronouncement.'
+      },
+      {
+        id: 't_funeral_liquidity',
+        title: 'Confirm Immediate Funeral Funding ($5,000–$15,000)',
+        subtitle: 'Determine funding source before signing mortuary service agreements',
+        timeframe: 'hours_0_24',
+        priority: 'urgent',
+        binderTabLink: 'emergency',
+        caution: 'Do NOT write checks from the decedent’s sole bank account. Sole accounts freeze immediately upon death notice, and checks will bounce with penalty fees.',
+        instructions: 'Check Section 1 (Emergency Plan) for the immediate cash buffer. Determine payment method: (1) Pre-need contract already funded; (2) Joint checking account with surviving spouse; (3) Cash reserve in home safe; or (4) Funeral Assignment of Life Insurance directly with the mortuary.'
+      },
+      {
+        id: 't_sepulcher_cremation',
+        title: 'Verify Right of Sepulcher & Cremation Authorization',
+        subtitle: 'Avoid mortuary delays and cremation disputes',
+        timeframe: 'hours_0_24',
+        priority: 'urgent',
+        binderTabLink: 'legal',
+        caution: 'Cremation is irreversible. State laws require either a designated disposition agent or notarized signatures from ALL surviving adult children before cremation can take place.',
+        instructions: 'Check Section 3 (Legal) for the designated Disposition Agent. If cremation is chosen and no agent was appointed, request cremation authorization forms from all surviving adult children immediately.'
       },
       {
         id: 't_organ',
@@ -142,6 +172,26 @@ export const EXECUTOR_CHECKLIST_PHASES: ChecklistPhase[] = [
         timeframe: 'days_2_5',
         priority: 'important',
         instructions: 'Collect incoming physical mail daily to discover undisclosed bank accounts, insurance statements, or utility bills. Submit a USPS Forwarding order to the Executor’s address once Letters Testamentary are issued.'
+      },
+      {
+        id: 't_prep_bank_freeze',
+        title: 'Bank Death Freeze Preparation: Audit Auto-Debits & Statements',
+        subtitle: 'Download statements BEFORE notifying financial institutions of death',
+        timeframe: 'days_2_5',
+        priority: 'urgent',
+        binderTabLink: 'financial',
+        caution: 'Once a bank is notified of death, sole accounts freeze instantly and online banking access is revoked.',
+        instructions: 'Before presenting death certificates to banks: (1) Download the last 12 months of checking and credit card statements; (2) Identify critical auto-debits (power, heating gas, homeowners insurance, mortgage); (3) Redirect essential household bills to a surviving joint account or credit card to prevent frozen pipes or insurance cancellation.'
+      },
+      {
+        id: 't_credit_card_authorized_users',
+        title: 'Cease Use of Deceased Credit Cards & Audit Surviving Credit',
+        subtitle: 'Authorized user cards deactivate immediately upon primary death',
+        timeframe: 'days_2_5',
+        priority: 'urgent',
+        binderTabLink: 'financial',
+        caution: 'Charging purchases on a deceased person’s credit card—even as an authorized user—constitutes fraud. Surviving spouses who are authorized users lose card access immediately.',
+        instructions: 'Cut up or secure all credit cards in the decedent’s name. If the surviving spouse only held authorized user cards, help them open an individual credit card immediately so they maintain purchasing power for living expenses.'
       }
     ]
   },
@@ -186,6 +236,25 @@ export const EXECUTOR_CHECKLIST_PHASES: ChecklistPhase[] = [
         priority: 'important',
         binderTabLink: 'recurring',
         instructions: 'Use Section 5 (Recurring Bills) to cancel non-essential services. Keep home electricity, heating, water, and homeowners insurance active until the property is settled.'
+      },
+      {
+        id: 't_claim_pod_fasttrack',
+        title: 'Fast-Track Non-Probate Asset Claims (POD / TOD / Beneficiaries)',
+        subtitle: 'Claim checking, brokerage, and IRA funds without probate delays',
+        timeframe: 'days_5_14',
+        priority: 'urgent',
+        binderTabLink: 'financial',
+        instructions: 'Named beneficiaries do NOT need to wait for probate Letters Testamentary. As soon as certified death certificates arrive, beneficiaries should present their photo ID, SSN, and death certificate directly to banks and brokerages in Section 4 to disburse liquid funds.'
+      },
+      {
+        id: 't_mortgage_garn_st_germain',
+        title: 'Assert Garn-St. Germain Mortgage Protections & Maintain Payments',
+        subtitle: 'Lenders cannot enforce Due-on-Sale clauses against inheriting relatives',
+        timeframe: 'days_5_14',
+        priority: 'important',
+        binderTabLink: 'assets',
+        caution: 'Do NOT allow mortgage servicers to force heirs into refinancing at higher market rates.',
+        instructions: 'Under 12 U.S.C. § 1701j-3 (Garn-St. Germain Act), lenders cannot accelerate residential mortgages transferred to surviving relatives. Continue making standard monthly payments (PITI) from joint or estate funds. Notify the loan servicer in writing of the successor-in-interest status.'
       }
     ]
   },

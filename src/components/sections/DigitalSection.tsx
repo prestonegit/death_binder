@@ -7,12 +7,15 @@ import { PrivacyField } from '../common/PrivacyField';
 import { InfoBubble } from '../common/InfoBubble';
 import { PresetChips, type PresetOption } from '../common/PresetChips';
 import { INFO_DEFINITIONS } from '../../data/infoDefinitions';
+import { SectionStarterBanner } from '../common/SectionStarterBanner';
+import { DIGITAL_STARTERS, type SectionStarterArchetype } from '../../data/sectionStarters';
 
 interface DigitalSectionProps {
   accounts: DigitalAccount[];
   isPrivacyMasked: boolean;
   isNotApplicable?: boolean;
   onAddAccount: (account: DigitalAccount) => void;
+  onSetAccounts?: (accounts: DigitalAccount[]) => void;
   onUpdateAccount: (id: string, updated: Partial<DigitalAccount>) => void;
   onDeleteAccount: (id: string) => void;
   onToggleNA: (isNA: boolean) => void;
@@ -43,12 +46,39 @@ export const DigitalSection: React.FC<DigitalSectionProps> = ({
   isPrivacyMasked,
   isNotApplicable = false,
   onAddAccount,
+  onSetAccounts,
   onUpdateAccount,
   onDeleteAccount,
   onToggleNA
 }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  const hasExistingData = accounts.length > 0;
+
+  const handleApplyStarter = (
+    starter: SectionStarterArchetype<DigitalAccount[]>,
+    mode: 'fill_empty' | 'replace'
+  ) => {
+    const freshAccounts = starter.data.map((acc, index) => ({
+      ...acc,
+      id: `d_${Date.now()}_${index}`
+    }));
+
+    if (mode === 'replace' || !hasExistingData) {
+      if (onSetAccounts) {
+        onSetAccounts(freshAccounts);
+      } else {
+        freshAccounts.forEach(acc => onAddAccount(acc));
+      }
+    } else {
+      if (onSetAccounts) {
+        onSetAccounts([...accounts, ...freshAccounts]);
+      } else {
+        freshAccounts.forEach(acc => onAddAccount(acc));
+      }
+    }
+  };
 
   const handleAddNew = (preset?: PresetOption) => {
     const newId = `d_${Date.now()}`;
@@ -86,6 +116,17 @@ export const DigitalSection: React.FC<DigitalSectionProps> = ({
       <GuidanceTip type="info" title="Why Tech Companies Lock Accounts (Digital Legacy Laws)">
         Under privacy laws (RUFADAA), companies like Apple and Google cannot legally grant your family access to your photos or email unless you configure their built-in <strong>Legacy Contact</strong> or provide written consent.
       </GuidanceTip>
+
+      {/* 1-Click Digital Ecosystem Starters */}
+      <SectionStarterBanner
+        title="1-Click Digital Life Starters"
+        badge="Apple, Google, High-Privacy, or Paper"
+        description="Don't know where to start with passwords and digital legacy? Choose your primary digital ecosystem below to pre-fill a complete recovery setup in one click:"
+        starters={DIGITAL_STARTERS}
+        onApply={handleApplyStarter}
+        hasExistingData={hasExistingData}
+        defaultExpanded={!hasExistingData}
+      />
 
       {/* Quick-Add Presets */}
       <div className="quick-presets-wrapper no-print">

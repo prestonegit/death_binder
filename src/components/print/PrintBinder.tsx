@@ -319,12 +319,14 @@ export const PrintBinder: React.FC<PrintBinderProps> = ({
               <tr><td className="label-cell">Original Signed Will Location:</td><td className="value-cell bold">{legalDocuments.willLocation || '—'} (Date: {legalDocuments.willDate || '—'})</td></tr>
               <tr><td className="label-cell">Trust Name & Trustees:</td><td className="value-cell">{legalDocuments.trustName || '—'} ({legalDocuments.trustees || 'None listed'})</td></tr>
               <tr><td className="label-cell">Trust Agreement Location:</td><td className="value-cell">{legalDocuments.trustLocation || '—'}</td></tr>
-              <tr><td className="label-cell">Financial POA Agent & Location:</td><td className="value-cell">{legalDocuments.financialPoaAgent || '—'} — Location: {legalDocuments.financialPoaLocation || '—'}</td></tr>
-              <tr><td className="label-cell">Healthcare Proxy Agent & Location:</td><td className="value-cell">{legalDocuments.healthcareProxyAgent || '—'} — Location: {legalDocuments.healthcareProxyLocation || '—'}</td></tr>
-              <tr><td className="label-cell">Living Will / DNR / HIPAA:</td><td className="value-cell">Living Will: {legalDocuments.livingWillLocation || '—'} | DNR/HIPAA: {legalDocuments.dnrPolstLocation || '—'}</td></tr>
-              <tr><td className="label-cell">Safe Deposit Box & Keys:</td><td className="value-cell">{legalDocuments.safeDepositBoxBank || '—'} {maskValue(legalDocuments.safeDepositBoxLocation)} (Key: {maskValue(legalDocuments.safeDepositBoxKeyLocation)}) (Co-Signers: {legalDocuments.safeDepositBoxCoSigners || 'None'})</td></tr>
-              <tr><td className="label-cell">Disposition & Funeral Home:</td><td className="value-cell">{legalDocuments.disposition ? `Preference: ${legalDocuments.disposition.toUpperCase()}. ` : ''} {legalDocuments.funeralHomePreference || '—'}</td></tr>
+              <tr><td className="label-cell">Healthcare Proxy & Alternate:</td><td className="value-cell bold">{legalDocuments.healthcareProxyAgent || '—'} {legalDocuments.healthcareProxyAlternate ? `(Alternate: ${legalDocuments.healthcareProxyAlternate})` : ''} — Location: {legalDocuments.healthcareProxyLocation || '—'}</td></tr>
+              <tr><td className="label-cell">Financial Power of Attorney:</td><td className="value-cell">{legalDocuments.financialPoaAgent || '—'} {legalDocuments.financialPoaAlternate ? `(Alternate: ${legalDocuments.financialPoaAlternate})` : ''} — Location: {legalDocuments.financialPoaLocation || '—'}</td></tr>
+              <tr><td className="label-cell">Standalone HIPAA Authorization:</td><td className="value-cell">{legalDocuments.hipaaReleaseLocation || '—'} {legalDocuments.hipaaAuthorizedAgents ? `(Agents: ${legalDocuments.hipaaAuthorizedAgents})` : ''}</td></tr>
+              <tr><td className="label-cell">Living Will & POLST/DNR:</td><td className="value-cell">Living Will: {legalDocuments.livingWillLocation || '—'} | POLST/DNR: {legalDocuments.dnrPolstLocation || '—'}</td></tr>
+              <tr><td className="label-cell">Right of Sepulcher (Disposition):</td><td className="value-cell bold">Designated Agent: {legalDocuments.designatedDispositionAgent || 'Family / Next of Kin'} | Authority Form: {legalDocuments.dispositionAuthorizationFormLocation || '—'}</td></tr>
+              <tr><td className="label-cell">Disposition & Backup Plan:</td><td className="value-cell">{legalDocuments.disposition ? `Preference: ${legalDocuments.disposition.toUpperCase()}. ` : ''} {legalDocuments.dispositionBackupPlan ? `(Backup Plan: ${legalDocuments.dispositionBackupPlan}). ` : ''} {legalDocuments.funeralHomePreference || '—'}</td></tr>
               <tr><td className="label-cell">Service Wishes & Eulogy:</td><td className="value-cell">{legalDocuments.serviceWishes} {legalDocuments.eulogyNotes ? ` | Eulogy: ${legalDocuments.eulogyNotes}` : ''}</td></tr>
+              <tr><td className="label-cell">Safe Deposit Box & Keys:</td><td className="value-cell">{legalDocuments.safeDepositBoxBank || '—'} {maskValue(legalDocuments.safeDepositBoxLocation)} (Key: {maskValue(legalDocuments.safeDepositBoxKeyLocation)}) (Co-Signers: {legalDocuments.safeDepositBoxCoSigners || 'None'})</td></tr>
               <tr><td className="label-cell">Personal Letters Location:</td><td className="value-cell">{legalDocuments.personalLettersLocation || '—'}</td></tr>
             </tbody>
           </table>
@@ -347,20 +349,27 @@ export const PrintBinder: React.FC<PrintBinderProps> = ({
               <thead>
                 <tr>
                   <th>Institution</th>
-                  <th>Account Type</th>
-                  <th>Identifier (Last 4)</th>
-                  <th>Beneficiary Designation</th>
-                  <th>Notes / Website</th>
+                  <th>Account Type & Titling</th>
+                  <th>Identifier</th>
+                  <th>Primary & Contingent Beneficiaries</th>
+                  <th>Liquidity / Notes / Website</th>
                 </tr>
               </thead>
               <tbody>
                 {financialAccounts.map(acc => (
                   <tr key={acc.id}>
                     <td className="bold">{acc.institution || '—'}</td>
-                    <td>{acc.accountType}</td>
+                    <td>{acc.accountType} {acc.ownershipType ? `(${acc.ownershipType.toUpperCase()})` : ''}</td>
                     <td>{maskValue(acc.accountIdentifier)}</td>
-                    <td>{acc.beneficiaryDesignation || '—'}</td>
-                    <td>{acc.notes ? `${acc.notes} ` : ''}{acc.website ? `(${acc.website})` : ''}</td>
+                    <td>
+                      <div><strong>Primary:</strong> {acc.primaryBeneficiary || acc.beneficiaryDesignation || '—'}</div>
+                      {acc.contingentBeneficiary && <div><strong>Contingent:</strong> {acc.contingentBeneficiary}</div>}
+                    </td>
+                    <td>
+                      {acc.immediateLiquidityAccess && <span style={{ color: '#15803d', fontWeight: 700 }}>⚡ Day 1 Funeral Liquidity. </span>}
+                      {acc.cardholderRole && <span>Role: {acc.cardholderRole}. </span>}
+                      {acc.notes ? `${acc.notes} ` : ''}{acc.website ? `(${acc.website})` : ''}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -381,6 +390,7 @@ export const PrintBinder: React.FC<PrintBinderProps> = ({
                 <tr>
                   <th>Service / Payee</th>
                   <th>Category</th>
+                  <th>Action on Death</th>
                   <th>Estimated Amount</th>
                   <th>Paid Via</th>
                   <th>Cancellation Instructions</th>
@@ -391,6 +401,12 @@ export const PrintBinder: React.FC<PrintBinderProps> = ({
                   <tr key={r.id}>
                     <td className="bold">{r.name || '—'}</td>
                     <td>{r.category}</td>
+                    <td style={{ fontWeight: 700 }}>
+                      {r.actionOnDeath === 'must_maintain' ? '🟢 MUST MAINTAIN' :
+                       r.actionOnDeath === 'cancel_immediately' ? '🛑 CANCEL IMMEDIATELY' :
+                       r.actionOnDeath === 'review_with_counsel' ? '⚖️ REVIEW W/ COUNSEL' :
+                       r.actionOnDeath === 'claim_against_estate' ? '📄 SETTLE VIA ESTATE' : '—'}
+                    </td>
                     <td>{maskValue(r.estimatedAmount)} ({r.billingCycle})</td>
                     <td>{r.autoPaySource || '—'}</td>
                     <td>{r.cancellationInstructions || r.notes || '—'}</td>
@@ -486,12 +502,80 @@ export const PrintBinder: React.FC<PrintBinderProps> = ({
       {mode === 'full' && !notApplicableSections.medical && (
         <div className="print-section-block">
           <div className="print-section-header">
-            <h2>8. Medical Profile & Directives</h2>
+            <h2>8. Medical Profile & Clinical Directives</h2>
           </div>
           <table className="print-table">
             <tbody>
               <tr><td className="label-cell">Blood Type:</td><td className="value-cell bold">{medicalProfile.bloodType || '—'}</td></tr>
               <tr><td className="label-cell">Organ Donor Status:</td><td className="value-cell">{medicalProfile.organDonor.toUpperCase()}</td></tr>
+              <tr>
+                <td className="label-cell">CPR / Code Status:</td>
+                <td className="value-cell bold">
+                  {medicalProfile.codeStatus === 'dnr_natural_death'
+                    ? 'ALLOW NATURAL DEATH (DNR / Comfort Only — No Resuscitative CPR / Shocks)'
+                    : medicalProfile.codeStatus === 'cpr_full_code'
+                    ? 'FULL CODE (Attempt Resuscitation & Electric Shocks)'
+                    : medicalProfile.codeStatus || 'Refer to Living Will'}
+                </td>
+              </tr>
+              <tr>
+                <td className="label-cell">Breathing Machine (Ventilator):</td>
+                <td className="value-cell">
+                  {medicalProfile.ventilationSupport === 'time_limited_trial'
+                    ? 'Time-Limited Trial (3–5 days; withdraw if irreversible)'
+                    : medicalProfile.ventilationSupport === 'no_intubation'
+                    ? 'Do Not Intubate (DNI - Natural breathing and comfort only)'
+                    : medicalProfile.ventilationSupport || '—'}
+                </td>
+              </tr>
+              <tr>
+                <td className="label-cell">Artificial Nutrition & Hydration:</td>
+                <td className="value-cell">
+                  {medicalProfile.artificialNutritionHydration === 'pleasure_eating_only'
+                    ? 'Pleasure Feeding Only (Sips & bites by mouth; no feeding tubes or IV lines in terminal stage)'
+                    : medicalProfile.artificialNutritionHydration || '—'}
+                </td>
+              </tr>
+              <tr>
+                <td className="label-cell">Pain & Symptom Management:</td>
+                <td className="value-cell">
+                  {medicalProfile.painManagementPhilosophy === 'comfort_first'
+                    ? 'Comfort First (Principle of Double Effect: Complete pain relief even if drowsy)'
+                    : medicalProfile.painManagementPhilosophy === 'alertness_first'
+                    ? 'Alertness First (Prioritize cognitive lucidity to communicate with family)'
+                    : medicalProfile.painManagementPhilosophy || '—'}
+                </td>
+              </tr>
+              <tr>
+                <td className="label-cell">Preferred Terminal Setting:</td>
+                <td className="value-cell">{medicalProfile.terminalCareLocationPreference || '—'}</td>
+              </tr>
+              <tr>
+                <td className="label-cell">POLST / DNR Physical Location:</td>
+                <td className="value-cell bold">{medicalProfile.polstPhysicalLocation || '—'}</td>
+              </tr>
+              <tr>
+                <td className="label-cell">Hospice Care Status:</td>
+                <td className="value-cell">
+                  {medicalProfile.isEnrolledInHospice
+                    ? `Enrolled: ${medicalProfile.hospiceAgencyName || 'Hospice'} (24/7 Hotline: ${medicalProfile.hospiceEmergency24hPhone || '—'})`
+                    : 'Not currently enrolled in hospice'}
+                </td>
+              </tr>
+              {medicalProfile.qualityOfLife && (
+                <tr>
+                  <td className="label-cell">Acceptable Quality of Life:</td>
+                  <td className="value-cell">
+                    Withdraw life support if: 
+                    {medicalProfile.qualityOfLife.stopIfCannotRecognizeFamily ? ' [Cannot recognize family]' : ''}
+                    {medicalProfile.qualityOfLife.stopIfCannotCommunicate ? ' [Cannot communicate]' : ''}
+                    {medicalProfile.qualityOfLife.stopIfPermanentlyBedbound ? ' [Permanently bedbound]' : ''}
+                    {medicalProfile.qualityOfLife.stopIfPermanentComa ? ' [Permanent coma]' : ''}
+                    {medicalProfile.qualityOfLife.stopIfIntractableSuffering ? ' [Intractable suffering]' : ''}
+                    {medicalProfile.qualityOfLife.personalThresholdNotes ? ` — Notes: ${medicalProfile.qualityOfLife.personalThresholdNotes}` : ''}
+                  </td>
+                </tr>
+              )}
               <tr><td className="label-cell">Severe Allergies:</td><td className="value-cell">{medicalProfile.allergies || 'None listed'}</td></tr>
               <tr><td className="label-cell">Chronic Conditions:</td><td className="value-cell">{medicalProfile.conditions || 'None listed'}</td></tr>
               <tr><td className="label-cell">Active Medications & Dosages:</td><td className="value-cell">{medicalProfile.medications || 'None listed'}</td></tr>
@@ -499,6 +583,11 @@ export const PrintBinder: React.FC<PrintBinderProps> = ({
               <tr><td className="label-cell">Preferred Emergency Hospital:</td><td className="value-cell">{medicalProfile.preferredHospital || '—'}</td></tr>
             </tbody>
           </table>
+
+          <div className="print-sleeve-insert-box">
+            <div className="sleeve-badge">📁 PHYSICAL BINDER PLASTIC SLEEVE #0 (FRONT COVER): EMS & ADVANCE DIRECTIVES</div>
+            <p><strong>Instructions for Preparer:</strong> Place a physical copy of your state-approved physician-signed POLST/MOLST or Out-of-Hospital DNR in Sleeve #0 in the front cover or magnetized to your refrigerator so first responders (911) can legally honor your wishes.</p>
+          </div>
         </div>
       )}
 
