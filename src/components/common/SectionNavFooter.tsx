@@ -21,7 +21,8 @@ const TAB_METADATA: Record<string, { title: string; number?: string }> = {
   tax: { title: 'Tax & Vital Records', number: '10' },
   digital: { title: 'Digital Accounts', number: '11' },
   legacy: { title: 'Letters & Wishes', number: '12' },
-  sentimental: { title: 'Heirlooms & Pets', number: '13' }
+  history_interview: { title: 'Life Story & History Book', number: '13' },
+  sentimental: { title: 'Heirlooms & Pets', number: '14' }
 };
 
 const TABS_ORDER = [
@@ -39,6 +40,7 @@ const TABS_ORDER = [
   'tax',
   'digital',
   'legacy',
+  'history_interview',
   'sentimental'
 ];
 

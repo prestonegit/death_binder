@@ -1,7 +1,8 @@
 import React from 'react';
 import { 
   Printer, Download, ClipboardList, 
-  ArrowRight, Check, Minus, AlertCircle, Shield
+  ArrowRight, Check, Minus, AlertCircle, Shield,
+  Sparkles
 } from 'lucide-react';
 import type { ProfileData } from '../../types';
 import { evaluateSectionReadiness } from '../../utils/readiness';
@@ -66,6 +67,31 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
         <div className="privacy-badge-inline">
           <Shield size={14} />
           <span>Stored locally on this device · No cloud sync</span>
+        </div>
+      </section>
+
+      {/* Life Story & History Book Invitation Card */}
+      <section className="dashboard-memoir-card glass-panel">
+        <div className="memoir-card-left">
+          <div className="memoir-card-icon-wrap">
+            <Sparkles size={20} />
+          </div>
+          <div className="memoir-card-text">
+            <h3>Family History & Life Story Interview</h3>
+            <p>
+              Preserve the places you lived, travels, favorite meals, concerts, family traditions, and timeless life lessons for your children and grandchildren.
+            </p>
+          </div>
+        </div>
+        <div className="memoir-card-right">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => onNavigateTab('history_interview')}
+          >
+            <span>Open Life Story Interview</span>
+            <ArrowRight size={14} />
+          </button>
         </div>
       </section>
 

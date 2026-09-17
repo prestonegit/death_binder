@@ -1,10 +1,11 @@
 import React from 'react';
-import type { ProfileData } from '../../types';
+import type { ProfileData, HistoryCategory } from '../../types';
 import { EXECUTOR_CHECKLIST_PHASES } from '../../data/executorChecklist';
+import { CURATED_HISTORY_QUESTIONS, HISTORY_CHAPTERS, getChapterMeta } from '../../data/historyQuestions';
 
 interface PrintBinderProps {
   profile: ProfileData;
-  mode: 'full' | 'emergency' | 'financial' | 'spines';
+  mode: 'full' | 'emergency' | 'financial' | 'spines' | 'history';
   maskSensitive: boolean;
 }
 
@@ -27,6 +28,7 @@ export const PrintBinder: React.FC<PrintBinderProps> = ({
     digitalAccounts,
     taxVitalRecords,
     legacyMemories,
+    historyInterview,
     sentimentalItems,
     pets,
     notApplicableSections = {}
@@ -115,6 +117,101 @@ export const PrintBinder: React.FC<PrintBinderProps> = ({
     );
   }
 
+  if (mode === 'history') {
+    const customList = historyInterview?.customQuestions || [];
+    const allQList = [
+      ...CURATED_HISTORY_QUESTIONS,
+      ...customList.map(q => ({
+        id: q.id,
+        category: (q.category as HistoryCategory) || 'custom',
+        chapterTitle: getChapterMeta(q.category).title,
+        question: q.question,
+        subtitle: '',
+        hints: [],
+        placeholder: ''
+      }))
+    ];
+    const entries = historyInterview?.entries || {};
+
+    return (
+      <div className="print-only-container print-memoir-book-view">
+        {/* Standalone Keepsake Cover Page */}
+        <div className="print-page print-memoir-cover">
+          <div className="print-cover-frame">
+            <div className="print-cover-ornament">✦ ✦ ✦</div>
+            <span className="print-cover-kicker">ARCHIVAL FAMILY RECORD & ORAL HISTORY</span>
+            <h1 className="print-cover-title">Family History & Life Stories</h1>
+            <h2 className="print-cover-name">{personalInfo.fullName || profileName}</h2>
+            <div className="print-cover-divider-line" />
+            <p className="print-cover-subtitle">
+              A personal collection of places lived, travels, favorite meals, concerts, family traditions, and hard-earned life wisdom for future generations.
+            </p>
+            <div className="print-cover-meta-box">
+              <span>Date Compiled: {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span>Preserved for Children, Grandchildren & Loved Ones</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Chapters Content */}
+        <div className="print-page print-memoir-content">
+          <div className="print-section-header">
+            <h2>Family History & Life Story Chapters</h2>
+          </div>
+
+          {HISTORY_CHAPTERS.map(ch => {
+            const chQuestions = allQList.filter(q => q.category === ch.category);
+            const answeredInCh = chQuestions.filter(q => !!entries[q.id]?.answer?.trim());
+
+            if (answeredInCh.length === 0) return null;
+
+            return (
+              <div key={ch.category} className="print-memoir-chapter-section">
+                <div className="print-chapter-header">
+                  <span className="print-chapter-tag">Chapter</span>
+                  <h3 className="print-chapter-heading">{ch.title}</h3>
+                  <p className="print-chapter-desc">{ch.subtitle}</p>
+                </div>
+
+                <div className="print-chapter-stories">
+                  {answeredInCh.map(q => {
+                    const entry = entries[q.id];
+                    return (
+                      <div key={q.id} className="print-memoir-story-item">
+                        <h4 className="print-story-title">{q.question}</h4>
+                        {(entry.eraOrYear || entry.location) && (
+                          <div className="print-story-meta">
+                            {entry.eraOrYear && <span className="meta-tag">Era: {entry.eraOrYear}</span>}
+                            {entry.eraOrYear && entry.location && <span className="meta-sep">·</span>}
+                            {entry.location && <span className="meta-tag">Location: {entry.location}</span>}
+                          </div>
+                        )}
+                        <div className="print-story-text">
+                          {entry.answer.split('\n\n').map((para, idx) => (
+                            <p key={idx}>{para}</p>
+                          ))}
+                        </div>
+                        {entry.photoNote && (
+                          <div className="print-story-photo-note">
+                            <strong>Photo Reference:</strong> {entry.photoNote}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+
+          <div className="print-footer-disclaimer">
+            Recorded and preserved with love in DeathBinder.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="print-binder-document">
       {/* COVER PAGE */}
@@ -175,7 +272,8 @@ export const PrintBinder: React.FC<PrintBinderProps> = ({
 
               <tr className="toc-pillar-header"><td colSpan={3}><strong>🌿 5. MEMORIES & WISHES</strong></td></tr>
               <tr><td>Tab 11: Legacy, Family Origins & Life Wisdom</td><td className="dots" /><td className="pg">Tab 11</td></tr>
-              <tr><td>Tab 12: Sentimental Heirlooms & Pet Guardianship</td><td className="dots" /><td className="pg">Tab 12</td></tr>
+              <tr><td>Tab 12: Life Story & Family History Book</td><td className="dots" /><td className="pg">Tab 12</td></tr>
+              <tr><td>Tab 13: Sentimental Heirlooms & Pet Guardianship</td><td className="dots" /><td className="pg">Tab 13</td></tr>
             </tbody>
           </table>
         </div>
@@ -670,11 +768,87 @@ export const PrintBinder: React.FC<PrintBinderProps> = ({
         </div>
       )}
 
-      {/* 12. SENTIMENTAL & PETS */}
+      {/* 12. LIFE STORY & FAMILY HISTORY BOOK */}
+      {mode === 'full' && !notApplicableSections.history_interview && (
+        <div className="print-section-block">
+          <div className="print-section-header">
+            <h2>12. Life Story & Family History Book</h2>
+          </div>
+
+          {(() => {
+            const customList = historyInterview?.customQuestions || [];
+            const allQList = [
+              ...CURATED_HISTORY_QUESTIONS,
+              ...customList.map(q => ({
+                id: q.id,
+                category: (q.category as HistoryCategory) || 'custom',
+                chapterTitle: getChapterMeta(q.category).title,
+                question: q.question,
+                subtitle: '',
+                hints: [],
+                placeholder: ''
+              }))
+            ];
+            const entries = historyInterview?.entries || {};
+            const answeredTotal = allQList.filter(q => !!entries[q.id]?.answer?.trim());
+
+            if (answeredTotal.length === 0) {
+              return (
+                <p className="print-empty-note" style={{ fontStyle: 'italic', color: '#555' }}>
+                  No life story or family history memories recorded yet.
+                </p>
+              );
+            }
+
+            return (
+              <div className="print-memoir-flow">
+                {HISTORY_CHAPTERS.map(ch => {
+                  const chQuestions = allQList.filter(q => q.category === ch.category);
+                  const answeredInCh = chQuestions.filter(q => !!entries[q.id]?.answer?.trim());
+                  if (answeredInCh.length === 0) return null;
+
+                  return (
+                    <div key={ch.category} className="print-memoir-chapter-box" style={{ marginBottom: '18px' }}>
+                      <h3 className="print-subheading" style={{ borderBottom: '1px solid #1c1917', paddingBottom: '3px', marginBottom: '8px' }}>
+                        {ch.title}
+                      </h3>
+                      {answeredInCh.map(q => {
+                        const entry = entries[q.id];
+                        return (
+                          <div key={q.id} style={{ marginBottom: '12px', pageBreakInside: 'avoid' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '3px' }}>
+                              <strong style={{ fontSize: '10pt', color: '#1c1917' }}>{q.question}</strong>
+                              {(entry.eraOrYear || entry.location) && (
+                                <span style={{ fontSize: '8.5pt', color: '#555' }}>
+                                  {[entry.eraOrYear, entry.location].filter(Boolean).join(' · ')}
+                                </span>
+                              )}
+                            </div>
+                            <div style={{ fontSize: '9.5pt', lineHeight: 1.45, whiteSpace: 'pre-wrap', color: '#222' }}>
+                              {entry.answer}
+                            </div>
+                            {entry.photoNote && (
+                              <div style={{ fontSize: '8.5pt', fontStyle: 'italic', color: '#666', marginTop: '2px' }}>
+                                Photo Reference: {entry.photoNote}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* 13. SENTIMENTAL & PETS */}
       {mode === 'full' && !notApplicableSections.sentimental && (
         <div className="print-section-block">
           <div className="print-section-header">
-            <h2>12. Sentimental Heirlooms & Pet Guardianship</h2>
+            <h2>13. Sentimental Heirlooms & Pet Guardianship</h2>
           </div>
 
           {sentimentalItems.length > 0 && (

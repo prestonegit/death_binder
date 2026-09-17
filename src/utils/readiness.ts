@@ -193,8 +193,22 @@ export function evaluateSectionReadiness(profile: ProfileData): BinderIndexSumma
         : 'Optional family messages'
     },
     {
-      id: 'sentimental',
+      id: 'history_interview',
       number: '13',
+      title: 'Life Story & History Book',
+      category: 'Digital & Legacy',
+      isNotApplicable: !!na['history_interview'],
+      isComplete: !!na['history_interview'] || (
+        (profile.historyInterview ? Object.values(profile.historyInterview.entries || {}).filter(e => !!e.answer?.trim()).length + (profile.historyInterview.customQuestions || []).filter(q => !!q.answer?.trim()).length : 0) > 0
+      ),
+      itemCount: profile.historyInterview ? Object.values(profile.historyInterview.entries || {}).filter(e => !!e.answer?.trim()).length + (profile.historyInterview.customQuestions || []).filter(q => !!q.answer?.trim()).length : 0,
+      summary: (profile.historyInterview ? Object.values(profile.historyInterview.entries || {}).filter(e => !!e.answer?.trim()).length + (profile.historyInterview.customQuestions || []).filter(q => !!q.answer?.trim()).length : 0) > 0
+        ? `${profile.historyInterview ? Object.values(profile.historyInterview.entries || {}).filter(e => !!e.answer?.trim()).length + (profile.historyInterview.customQuestions || []).filter(q => !!q.answer?.trim()).length : 0} memor${(profile.historyInterview ? Object.values(profile.historyInterview.entries || {}).filter(e => !!e.answer?.trim()).length + (profile.historyInterview.customQuestions || []).filter(q => !!q.answer?.trim()).length : 0) === 1 ? 'y' : 'ies'} recorded`
+        : 'Memoir interview pending'
+    },
+    {
+      id: 'sentimental',
+      number: '14',
       title: 'Sentimental Heirlooms & Pets',
       category: 'Digital & Legacy',
       isNotApplicable: !!na['sentimental'],

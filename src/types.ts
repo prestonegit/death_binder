@@ -256,6 +256,35 @@ export interface PetCare {
   notes: string;
 }
 
+export type HistoryCategory = 
+  | 'homes'
+  | 'travel'
+  | 'food'
+  | 'events'
+  | 'traditions'
+  | 'roots'
+  | 'love'
+  | 'milestones'
+  | 'wisdom'
+  | 'custom';
+
+export interface HistoryInterviewEntry {
+  id: string;
+  category: HistoryCategory | string;
+  question: string;
+  answer: string;
+  eraOrYear?: string;
+  location?: string;
+  photoNote?: string;
+  isCustom?: boolean;
+  updatedAt?: string;
+}
+
+export interface HistoryInterviewData {
+  entries: Record<string, HistoryInterviewEntry>;
+  customQuestions?: HistoryInterviewEntry[];
+}
+
 export interface ProfileData {
   profileName: string; // e.g. "Primary Binder", "Spouse's Packet"
   notApplicableSections?: Record<string, boolean>; // e.g. { pets: true, recurring: false }
@@ -273,6 +302,7 @@ export interface ProfileData {
   legacyMemories: LegacyMemories;
   sentimentalItems: SentimentalItem[];
   pets: PetCare[];
+  historyInterview?: HistoryInterviewData;
 }
 
 export interface LegacyBinderData {

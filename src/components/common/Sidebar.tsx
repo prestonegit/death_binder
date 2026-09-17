@@ -74,7 +74,8 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { id: 'digital', number: '11', label: 'Online Accounts & Vaults', icon: Key },
       { id: 'legacy', number: '12', label: 'Letters & Family Wishes', icon: Heart },
-      { id: 'sentimental', number: '13', label: 'Heirlooms & Pets', icon: Gift }
+      { id: 'history_interview', number: '13', label: 'Life Story & History Book', icon: BookOpen },
+      { id: 'sentimental', number: '14', label: 'Heirlooms & Pets', icon: Gift }
     ]
   }
 ];

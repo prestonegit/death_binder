@@ -2495,3 +2495,885 @@ body.dark-mode .nav-footer-btn-primary {
     font-weight: bold;
   }
 }
+
+/* ==========================================================================
+   LIFE STORY & FAMILY HISTORY BOOK (INTERVIEW & MEMOIR)
+   ========================================================================== */
+
+.history-interview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Mode Bar & Segmented Control */
+.history-mode-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+}
+
+.history-segmented-control {
+  display: inline-flex;
+  background: var(--bg-subtle);
+  padding: 3px;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+}
+
+.segmented-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.segmented-btn:hover {
+  color: var(--text-ink);
+}
+
+.segmented-btn.active {
+  background: var(--bg-card);
+  color: var(--text-ink);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.history-stats-pill {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.history-stats-count {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.history-stats-count strong {
+  color: var(--text-ink);
+}
+
+.print-book-shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ==================== INTERVIEW PROMPTER ==================== */
+.interview-prompter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.interview-card {
+  padding: 32px 36px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.interview-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 16px;
+}
+
+.interview-chapter-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chapter-kicker {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--accent-secondary);
+  background: var(--bg-subtle);
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+.question-counter {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.interview-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.icon-action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-ink);
+}
+
+.interview-prompt-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.interview-question-title {
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--text-ink);
+  line-height: 1.35;
+  margin: 0;
+}
+
+.interview-question-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Memory Jogger Box */
+.memory-jogger-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.memory-jogger-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-ink);
+}
+
+.sparkle-icon {
+  color: var(--accent-secondary);
+}
+
+.memory-jogger-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 6px 14px;
+}
+
+.memory-jogger-list li {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  position: relative;
+  padding-left: 14px;
+  line-height: 1.4;
+}
+
+.memory-jogger-list li::before {
+  content: "•";
+  position: absolute;
+  left: 2px;
+  color: var(--accent-secondary);
+}
+
+/* Interview Input Area */
+.interview-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.interview-input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.interview-textarea {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 0.98rem;
+  line-height: 1.65;
+  padding: 16px;
+  border-radius: 6px;
+  resize: vertical;
+  min-height: 180px;
+}
+
+/* Voice Dictation Button */
+.voice-dictate-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.voice-dictate-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-ink);
+}
+
+.voice-dictate-btn.listening {
+  background: #fef2f2;
+  border-color: #f87171;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+body.dark-mode .voice-dictate-btn.listening {
+  background: #450a0a;
+  border-color: #ef4444;
+  color: #fca5a5;
+}
+
+.voice-pulse-ring {
+  width: 8px;
+  height: 8px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  animation: pulse-ring 1.4s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+  100% { transform: scale(0.9); opacity: 1; }
+}
+
+/* Archival Metadata Grid (Era, Location, Photo) */
+.archival-metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.archival-metadata-grid .form-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+}
+
+.form-input-sm {
+  padding: 6px 10px;
+  font-size: 0.86rem;
+}
+
+/* Stepper Footer */
+.interview-stepper-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 20px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stepper-center-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Tray Card with Categories */
+.interview-tray-card {
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tray-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.category-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: 0.82rem;
+  border-radius: 20px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.category-filter-chip:hover {
+  background: var(--bg-hover);
+  color: var(--text-ink);
+}
+
+.category-filter-chip.active {
+  background: var(--text-ink);
+  color: var(--text-inverse);
+  border-color: var(--text-ink);
+}
+
+.category-filter-chip .chip-count {
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+/* ==================== HISTORY BOOK VIEW ==================== */
+.history-book-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.book-toolbar-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+}
+
+.chapter-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chapter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: 0.84rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chapter-pill:hover {
+  background: var(--bg-hover);
+  color: var(--text-ink);
+}
+
+.chapter-pill.active {
+  background: var(--bg-card);
+  color: var(--text-ink);
+  font-weight: 600;
+  border-color: var(--text-ink);
+}
+
+.chapter-pill .pill-badge {
+  font-size: 0.74rem;
+  background: var(--border-subtle);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.chapter-pill.active .pill-badge {
+  background: var(--text-ink);
+  color: var(--text-inverse);
+}
+
+.book-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Memoir Chapters Flow */
+.memoir-chapters-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.memoir-chapter-block {
+  padding: 28px 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chapter-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 16px;
+}
+
+.chapter-numeral {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: var(--accent-secondary);
+  display: block;
+}
+
+.chapter-main-title {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  color: var(--text-ink);
+  margin: 2px 0 4px;
+}
+
+.chapter-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.chapter-recorded-badge {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--bg-subtle);
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+
+/* Stories in Chapter */
+.chapter-stories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.memoir-story-card {
+  padding: 18px 20px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.story-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.story-question-heading {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--text-ink);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.story-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.story-edit-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-ink);
+}
+
+.story-meta-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+.story-prose-body {
+  font-size: 0.94rem;
+  color: var(--text-ink);
+  line-height: 1.7;
+}
+
+.story-prose-body p {
+  margin-bottom: 8px;
+  color: var(--text-ink);
+}
+
+.story-prose-body p:last-child {
+  margin-bottom: 0;
+}
+
+.story-photo-reference {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 8px;
+}
+
+.chapter-empty-state {
+  padding: 24px;
+  text-align: center;
+  background: var(--bg-subtle);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.empty-state-text {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.chapter-footer-prompts {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.next-prompt-kicker {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.inline-prompt-jump-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.84rem;
+  color: var(--accent-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.inline-prompt-jump-btn:hover {
+  color: var(--text-ink);
+}
+
+/* Feature invitation cards */
+.dashboard-memoir-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+}
+
+.memoir-card-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.memoir-card-icon-wrap {
+  background: var(--bg-subtle);
+  color: var(--accent-secondary);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+}
+
+.memoir-card-text h3 {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  margin: 0 0 4px;
+}
+
+.memoir-card-text p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 650px;
+}
+
+.legacy-interview-link-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-subtle);
+  margin-bottom: 20px;
+}
+
+.legacy-interview-link-banner h4 {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legacy-interview-link-banner p {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ==================== PRINT STYLES FOR LIFE STORY & MEMOIR ==================== */
+@media print {
+  .print-memoir-book-view {
+    display: block !important;
+  }
+
+  .print-memoir-cover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+    page-break-after: always;
+  }
+
+  .print-cover-frame {
+    border: 2pt double #1c1917;
+    padding: 40pt 30pt;
+    text-align: center;
+    width: 85%;
+    margin: 0 auto;
+  }
+
+  .print-cover-ornament {
+    font-size: 14pt;
+    letter-spacing: 0.3em;
+    color: #555;
+    margin-bottom: 12pt;
+  }
+
+  .print-cover-kicker {
+    font-size: 9pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #444;
+    display: block;
+    margin-bottom: 8pt;
+  }
+
+  .print-cover-title {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 26pt;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 8pt 0 12pt;
+    color: #000;
+  }
+
+  .print-cover-name {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 18pt;
+    font-style: italic;
+    color: #222;
+    margin-bottom: 18pt;
+  }
+
+  .print-cover-divider-line {
+    width: 60pt;
+    height: 1pt;
+    background: #000;
+    margin: 0 auto 18pt;
+  }
+
+  .print-cover-subtitle {
+    font-size: 10pt;
+    line-height: 1.5;
+    color: #444;
+    max-width: 340pt;
+    margin: 0 auto 24pt;
+  }
+
+  .print-cover-meta-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4pt;
+    font-size: 8.5pt;
+    color: #666;
+    border-top: 0.5pt solid #888;
+    padding-top: 12pt;
+  }
+
+  .print-memoir-chapter-section {
+    page-break-inside: avoid;
+    margin-bottom: 24pt;
+  }
+
+  .print-chapter-header {
+    border-bottom: 1.5pt solid #000;
+    padding-bottom: 4pt;
+    margin-bottom: 12pt;
+  }
+
+  .print-chapter-tag {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+    color: #555;
+    display: block;
+  }
+
+  .print-chapter-heading {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 14pt;
+    font-weight: bold;
+    margin: 2pt 0;
+  }
+
+  .print-chapter-desc {
+    font-size: 8.5pt;
+    color: #555;
+    margin: 0;
+  }
+
+  .print-memoir-story-item {
+    page-break-inside: avoid;
+    margin-bottom: 16pt;
+  }
+
+  .print-story-title {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 11pt;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 3pt;
+  }
+
+  .print-story-meta {
+    font-size: 8pt;
+    color: #666;
+    margin-bottom: 5pt;
+  }
+
+  .print-story-text {
+    font-size: 9.5pt;
+    line-height: 1.5;
+    color: #222;
+  }
+
+  .print-story-text p {
+    margin-bottom: 4pt;
+  }
+
+  .print-story-photo-note {
+    font-size: 8pt;
+    font-style: italic;
+    color: #555;
+    margin-top: 4pt;
+  }
+}

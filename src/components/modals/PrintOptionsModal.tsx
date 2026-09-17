@@ -1,8 +1,8 @@
 import React, { useState, useId } from 'react';
-import { Printer, FileText, AlertCircle, ShieldAlert, Tag } from 'lucide-react';
+import { Printer, FileText, AlertCircle, ShieldAlert, Tag, BookOpen } from 'lucide-react';
 import { useModalAccessibility } from '../../utils/useModalAccessibility';
 
-export type PrintMode = 'full' | 'emergency' | 'financial' | 'spines';
+export type PrintMode = 'full' | 'emergency' | 'financial' | 'spines' | 'history';
 
 interface PrintOptionsModalProps {
   isOpen: boolean;
@@ -116,6 +116,20 @@ export const PrintOptionsModal: React.FC<PrintOptionsModalProps> = ({
                 <h4>Binder Spine & Divider Tab Inserts</h4>
               </div>
               <p>Printable cut-out labels for 1", 1.5", and 2" physical binder spine sleeves and Avery standard divider index tabs.</p>
+            </button>
+
+            <button
+              type="button"
+              role="radio"
+              aria-checked={mode === 'history'}
+              className={`print-mode-card ${mode === 'history' ? 'active' : ''}`}
+              onClick={() => setMode('history')}
+            >
+              <div className="mode-card-header">
+                <BookOpen size={20} className="mode-icon" aria-hidden="true" />
+                <h4>Family History & Memoir Book Only</h4>
+              </div>
+              <p>Standalone keepsake booklet containing all recorded stories, places lived, travels, culinary recipes, and life wisdom to share with family without financial or legal papers.</p>
             </button>
           </div>
 

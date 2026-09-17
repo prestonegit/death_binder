@@ -11,13 +11,15 @@ interface LegacySectionProps {
   isNotApplicable?: boolean;
   onUpdate: (updated: Partial<LegacyMemories>) => void;
   onToggleNA: (isNA: boolean) => void;
+  onNavigateTab?: (tabId: string) => void;
 }
 
 export const LegacySection: React.FC<LegacySectionProps> = ({
   memories,
   isNotApplicable = false,
   onUpdate,
-  onToggleNA
+  onToggleNA,
+  onNavigateTab
 }) => {
   const hasExistingData = Boolean(
     memories.familyOrigins ||
@@ -55,6 +57,26 @@ export const LegacySection: React.FC<LegacySectionProps> = ({
         isComplete={!!memories.familyOrigins || !!memories.lifeLessonsWisdom || !!memories.traditionsRecipes}
         onToggleNotApplicable={onToggleNA}
       />
+
+      {onNavigateTab && (
+        <div className="legacy-interview-link-banner glass-panel">
+          <div>
+            <h4>
+              <BookOpen size={16} /> Looking for the Guided Life Story Interview?
+            </h4>
+            <p>
+              Step through prompts about places lived, travels, favorite meals, concerts, and family traditions in our dedicated interview prompter.
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={() => onNavigateTab('history_interview')}
+          >
+            <span>Open Interview</span> →
+          </button>
+        </div>
+      )}
 
       <GuidanceTip type="calm" title="The Non-Financial Legacy">
         While financial and legal details are necessary, the stories, principles, and traditions you record here are often what your children and grandchildren cherish the most.

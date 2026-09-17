@@ -9,7 +9,9 @@ import type {
   LegacyMemories,
   FinancialAccount,
   RecurringPayment,
-  QualityOfLifeBoundaries
+  QualityOfLifeBoundaries,
+  HistoryInterviewData,
+  HistoryInterviewEntry
 } from '../types';
 
 export const createEmptyPersonalInfo = (): PersonalInfo => ({
@@ -138,6 +140,11 @@ export const createEmptyLegacyMemories = (): LegacyMemories => ({
   notes: '',
 });
 
+export const createEmptyHistoryInterview = (): HistoryInterviewData => ({
+  entries: {},
+  customQuestions: []
+});
+
 export const createEmptyProfile = (name: string): ProfileData => ({
   profileName: name,
   notApplicableSections: {},
@@ -158,7 +165,8 @@ export const createEmptyProfile = (name: string): ProfileData => ({
   taxVitalRecords: createEmptyTaxVitalRecords(),
   legacyMemories: createEmptyLegacyMemories(),
   sentimentalItems: [],
-  pets: []
+  pets: [],
+  historyInterview: createEmptyHistoryInterview()
 });
 
 export const DEFAULT_BINDER_DATA: LegacyBinderData = {
@@ -305,7 +313,61 @@ export function migrateBinderData(raw: unknown): LegacyBinderData {
         ...(typeof p.legacyMemories === 'object' ? (p.legacyMemories as Record<string, string>) : {})
       },
       sentimentalItems: Array.isArray(p.sentimentalItems) ? p.sentimentalItems : [],
-      pets: Array.isArray(p.pets) ? p.pets : []
+      pets: Array.isArray(p.pets) ? p.pets : [],
+      historyInterview: (() => {
+        const rawInterview = (p.historyInterview && typeof p.historyInterview === 'object') ? (p.historyInterview as Record<string, unknown>) : {};
+        const rawEntries = (rawInterview.entries && typeof rawInterview.entries === 'object') ? (rawInterview.entries as Record<string, unknown>) : {};
+        const migratedEntries: Record<string, HistoryInterviewEntry> = {};
+
+        for (const [qId, val] of Object.entries(rawEntries)) {
+          if (val && typeof val === 'object') {
+            const entryObj = val as Record<string, unknown>;
+            migratedEntries[qId] = {
+              id: qId,
+              category: typeof entryObj.category === 'string' ? entryObj.category : 'custom',
+              question: typeof entryObj.question === 'string' ? entryObj.question : '',
+              answer: typeof entryObj.answer === 'string' ? entryObj.answer : '',
+              eraOrYear: typeof entryObj.eraOrYear === 'string' ? entryObj.eraOrYear : undefined,
+              location: typeof entryObj.location === 'string' ? entryObj.location : undefined,
+              photoNote: typeof entryObj.photoNote === 'string' ? entryObj.photoNote : undefined,
+              isCustom: typeof entryObj.isCustom === 'boolean' ? entryObj.isCustom : false,
+              updatedAt: typeof entryObj.updatedAt === 'string' ? entryObj.updatedAt : undefined
+            };
+          }
+        }
+
+        // Backwards compatibility migration from legacyMemories if not already answered
+        const legMem = p.legacyMemories as Record<string, string> | undefined;
+        if (legMem) {
+          if (legMem.traditionsRecipes?.trim() && !migratedEntries['q_family_recipes'] && !migratedEntries['q_holiday_traditions']) {
+            migratedEntries['q_family_recipes'] = {
+              id: 'q_family_recipes',
+              category: 'food',
+              question: 'What family comfort foods, signature dishes, or secret recipes taste like "home" to you?',
+              answer: legMem.traditionsRecipes.trim(),
+              updatedAt: new Date().toISOString()
+            };
+          }
+          if (legMem.lifeLessonsWisdom?.trim() && !migratedEntries['q_life_lessons']) {
+            migratedEntries['q_life_lessons'] = {
+              id: 'q_life_lessons',
+              category: 'wisdom',
+              question: 'What are the most hard-earned life lessons, core values, and truths that guided you through life?',
+              answer: legMem.lifeLessonsWisdom.trim(),
+              updatedAt: new Date().toISOString()
+            };
+          }
+        }
+
+        const customQuestions = Array.isArray(rawInterview.customQuestions)
+          ? (rawInterview.customQuestions as HistoryInterviewEntry[])
+          : [];
+
+        return {
+          entries: migratedEntries,
+          customQuestions
+        };
+      })()
     };
   }
 

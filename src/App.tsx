@@ -15,7 +15,8 @@ import type {
   TaxVitalRecords, 
   LegacyMemories, 
   SentimentalItem,
-  PetCare 
+  PetCare,
+  HistoryInterviewData
 } from './types';
 import { migrateBinderData, DEFAULT_BINDER_DATA } from './utils/migrations';
 
@@ -45,6 +46,7 @@ import { MedicalSection } from './components/sections/MedicalSection';
 import { DigitalSection } from './components/sections/DigitalSection';
 import { TaxVitalSection } from './components/sections/TaxVitalSection';
 import { LegacySection } from './components/sections/LegacySection';
+import { HistoryInterviewSection } from './components/sections/HistoryInterviewSection';
 import { SentimentalPetsSection } from './components/sections/SentimentalPetsSection';
 
 // Print Views
@@ -69,6 +71,7 @@ const TABS_ORDER = [
   'tax',
   'digital',
   'legacy',
+  'history_interview',
   'sentimental'
 ];
 
@@ -257,6 +260,10 @@ export default function App() {
 
   const updateLegacyMemories = (updated: Partial<LegacyMemories>) => {
     updateActiveProfile({ legacyMemories: { ...activeProfile.legacyMemories, ...updated } });
+  };
+
+  const updateHistoryInterview = (updated: HistoryInterviewData) => {
+    updateActiveProfile({ historyInterview: updated });
   };
 
   // Contacts Handlers
@@ -572,6 +579,17 @@ export default function App() {
               isNotApplicable={!!activeProfile.notApplicableSections?.legacy}
               onUpdate={updateLegacyMemories}
               onToggleNA={isNA => toggleSectionNotApplicable('legacy', isNA)}
+              onNavigateTab={tabId => setActiveTab(tabId)}
+            />
+          )}
+
+          {activeTab === 'history_interview' && (
+            <HistoryInterviewSection
+              interviewData={activeProfile.historyInterview}
+              isNotApplicable={!!activeProfile.notApplicableSections?.history_interview}
+              onUpdate={updateHistoryInterview}
+              onToggleNA={isNA => toggleSectionNotApplicable('history_interview', isNA)}
+              onOpenPrintBook={() => handleConfirmPrint({ mode: 'history', maskSensitive: false })}
             />
           )}
 
